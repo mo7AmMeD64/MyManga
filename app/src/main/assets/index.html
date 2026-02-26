@@ -1,0 +1,3535 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<style>
+        /* --- نفس التصميم الكلاسيكي تماماً --- */
+        :root { --main: #ff6b00; --bg: #121212; --card: #1e1e1e; --text: #fff; --nav-bg: #151515; }
+        body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; padding-bottom: 80px; -webkit-tap-highlight-color: transparent; }
+        .icon { width: 24px; height: 24px; fill: currentColor; display: inline-block; vertical-align: middle; }
+        .icon-sm { width: 18px; height: 18px; }
+        .app-bar { height: 60px; padding-top: 35px; background: rgba(18,18,18,0.95); backdrop-filter: blur(10px); position: fixed; top: 0; width: 100%; display: flex; align-items: center; justify-content: space-between; padding-left: 15px; padding-right: 15px; z-index: 999; border-bottom: 1px solid #333; box-sizing: border-box; transition: transform 0.3s ease; }
+        .app-bar.hidden { transform: translateY(-100%); }
+        .logo { font-weight: 800; font-size: 18px; color: var(--main); text-transform: uppercase; letter-spacing: 1px; }
+        .head-actions { display: flex; gap: 20px; color: #ccc; }
+        .ripple { position: relative; overflow: hidden; transform: translate3d(0, 0, 0); }
+        .ripple:after { content: ""; display: block; position: absolute; width: 100%; height: 100%; top: 0; left: 0; pointer-events: none; background-image: radial-gradient(circle, #fff 10%, transparent 10.01%); background-repeat: no-repeat; background-position: 50%; transform: scale(10, 10); opacity: 0; transition: transform .5s, opacity 1s; }
+        .ripple:active:after { transform: scale(0, 0); opacity: .2; transition: 0s; }
+        .content-area { padding-top: 100px; }
+        #search-box { position: fixed; top: 95px; width: 95%; left: 2.5%; background: #252525; padding: 0; display: none; z-index: 800; border-radius: 12px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); overflow: hidden; }
+        .inp { width: 100%; padding: 15px; background: transparent; border: none; color: white; outline: none; font-size: 16px; }
+        #quick-resume { display: none; margin: 0 10px 15px 10px; padding: 15px; background: linear-gradient(135deg, #2a2a2a, #1a1a1a); border-radius: 12px; border-right: 4px solid var(--main); align-items: center; justify-content: space-between; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .qr-info { display: flex; flex-direction: column; gap: 4px; }
+        .qr-title { font-weight: bold; font-size: 14px; color: #fff; }
+        .qr-ch { font-size: 12px; color: var(--main); font-weight: 600; }
+        .qr-btn { background: var(--main); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; box-shadow: 0 2px 10px var(--main); }
+        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; padding: 10px; }
+        .grid.list-mode { grid-template-columns: 1fr; }
+        .grid.list-mode .card { aspect-ratio: auto; height: 110px; display: flex; flex-direction: row; }
+        .grid.list-mode .card img { width: 85px; height: 100%; }
+        .grid.list-mode .card-grad { position: relative; background: none; padding: 15px; width: 100%; display: flex; align-items: center; justify-content: flex-start; }
+        .grid.list-mode .card-title { font-size: 14px; text-align: right; white-space: normal; }
+        .card { background: var(--card); border-radius: 8px; overflow: hidden; position: relative; aspect-ratio: 2/3; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
+        .card img { width: 100%; height: 100%; object-fit: cover; }
+        .card-grad { position: absolute; bottom: 0; width: 100%; background: linear-gradient(to top, rgba(0,0,0,0.95), transparent); padding: 40px 8px 8px 8px; }
+        .card-title { font-size: 11px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: center; font-weight: 600; }
+        .skeleton { background: #222; position: relative; overflow: hidden; }
+        .skeleton::after { content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; transform: translateX(-100%); background-image: linear-gradient(90deg, rgba(255,255,255,0) 0, rgba(255,255,255,0.03) 20%, rgba(255,255,255,0.06) 60%, rgba(255,255,255,0)); animation: shimmer 1.5s infinite; }
+        @keyframes shimmer { 100% { transform: translateX(100%); } }
+        .settings-list { padding: 20px; display: flex; flex-direction: column; gap: 12px; }
+        .set-btn { background: #222; border: 1px solid #333; padding: 16px; border-radius: 12px; color: white; text-align: right; font-size: 15px; font-weight: 600; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
+        .set-btn:active { transform: scale(0.98); background: #333; }
+        .color-grid { display: flex; gap: 15px; justify-content: center; margin: 20px 0; }
+        .color-circle { width: 40px; height: 40px; border-radius: 50%; border: 3px solid #222; cursor: pointer; transition: 0.2s; }
+        .color-circle.selected { border-color: white; transform: scale(1.15); box-shadow: 0 0 15px var(--main); }
+        .danger-zone { margin-top: 30px; border-top: 1px solid #333; padding-top: 20px; }
+        .btn-red { background: rgba(255, 68, 68, 0.1); color: var(--danger); border: 1px solid var(--danger); }
+        .btn-green { background: rgba(0, 200, 81, 0.1); color: var(--success); border: 1px solid var(--success); }
+        #page-details { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg); z-index: 1000; overflow-y: auto; }
+        .header-con { position: relative; height: 340px; }
+        .header-img { width: 100%; height: 100%; object-fit: cover; opacity: 0.4; filter: blur(10px); }
+        .info-con { position: absolute; bottom: 0; width: 100%; padding: 20px; display: flex; gap: 20px; align-items: flex-end; background: linear-gradient(to top, var(--bg) 10%, transparent); box-sizing: border-box; }
+        .poster { width: 120px; border-radius: 8px; box-shadow: 0 5px 20px rgba(0,0,0,0.6); border: 1px solid #444; }
+        .action-row { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+        .action-btn { background: #2a2a2a; color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; font-size: 13px; display:flex; justify-content:center; align-items:center; gap:8px; width: 100%; transition:0.2s; }
+        #btn-resume { background: var(--main); color: #fff; }
+        #btn-fav.active { color: #ff4444; background: rgba(255, 68, 68, 0.15); }
+        #btn-fav.active svg { fill: #ff4444; }
+        .ch-filter-con { padding: 15px; background: #181818; border-bottom: 1px solid #2a2a2a; display: flex; gap: 10px; }
+        .ch-filter-inp { flex: 1; background: #252525; border: 1px solid #333; padding: 10px; border-radius: 8px; color: white; font-size: 14px; outline: none; text-align: center; box-sizing: border-box; }
+        .ch-tool-btn { background: #252525; border: 1px solid #333; color: #ccc; width: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+        .ch-list { padding-bottom: 50px; }
+        .ch-item { 
+    padding: 18px 20px; 
+    border-bottom: 1px solid #222; 
+    display: flex; 
+    justify-content: space-between; 
+    font-size: 14px; 
+    color: #eee; 
+    align-items: center; 
+    position: relative;
+}
+.ch-item.read { 
+    color: #666; 
+}
+.ch-item.read::before {
+    content: "✓";
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--main);
+    font-size: 20px;
+    font-weight: bold;
+}
+        .ch-tag { font-size: 10px; background: #222; padding: 4px 8px; border-radius: 6px; color: #888; }
+        .ch-item.read .ch-tag { background: transparent; border: 1px solid #333; }
+        #page-reader { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; z-index: 2000; overflow-y: scroll; overflow-x: hidden; touch-action: pan-y; }
+        #brightness-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: black; opacity: 0; pointer-events: none; z-index: 2005; }
+        .sepia-mode { filter: sepia(0.8) contrast(0.9) brightness(0.9); background-color: #f4ecd8 !important; }
+        .p-img { 
+    width: 100%; 
+    display: block; 
+    margin: 0; 
+    padding: 0;
+    transition: width 0.1s ease-out; 
+    vertical-align: top; /* مهم جداً لإزالة الفراغ السفلي */
+}
+.p-img.fit-screen { 
+    width: auto; 
+    max-width: 100%; 
+    max-height: 100vh; 
+}
+.p-con { 
+    text-align: center; 
+    width: 100%; 
+    display: flex; 
+    justify-content: center; 
+    margin: 0; 
+    padding: 0;
+    line-height: 0; /* إزالة أي ارتفاع خط */
+}
+        .reader-ui { position: fixed; width: 100%; background: rgba(0,0,0,0.9); padding: 15px; z-index: 2010; transition: 0.3s; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
+        .ui-top { top: 0; padding-top: 40px; border-bottom: 1px solid #333; }
+        .ui-bot { bottom: 0; flex-direction: column; gap: 15px; padding-bottom: 20px; border-top: 1px solid #333; }
+        .bot-row { display: flex; justify-content: center; align-items: center; gap: 20px; width: 100%; }
+        .ui-hide { transform: translateY(-100%); }
+        .ui-hide-b { transform: translateY(100%); }
+        .nav { position: fixed; bottom: 0; width: 100%; height: 65px; background: var(--nav-bg); display: flex; justify-content: space-around; align-items: center; border-top: 1px solid #222; z-index: 900; padding-bottom: 5px; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: #666; transition: 0.2s; padding: 10px; border-radius: 12px; }
+        .nav-item.active { color: var(--main); background: rgba(255,255,255,0.03); }
+        .nav-txt { font-size: 10px; font-weight: 600; margin-top: 4px; }
+        .toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%); background: #222; padding: 12px 24px; border-radius: 30px; font-size: 13px; display: none; z-index: 3000; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 1px solid var(--main); color: white; }
+        .zoom-btn { 
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a); 
+    color: white; 
+    border: 2px solid #555; 
+    width: 45px; 
+    height: 45px; 
+    border-radius: 50%; 
+    font-size: 22px; 
+    font-weight: bold;
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    transition: 0.2s;
+    user-select: none;
+}
+.zoom-btn:active { 
+    transform: scale(0.9); 
+    background: var(--main);
+    border-color: var(--main);
+}
+        .reader-tool { background: #333; color: #ccc; padding: 8px 15px; border-radius: 20px; font-size: 12px; border: 1px solid #444; }
+        .range-con { width: 80%; display: flex; align-items: center; gap: 10px; color: #aaa; font-size: 12px; }
+        input[type=range] { flex: 1; accent-color: var(--main); height: 4px; }
+        .reader-head-btn { display: flex; align-items: center; gap: 5px; color: white; padding: 5px 10px; background: rgba(255,255,255,0.1); border-radius: 20px; font-size: 11px; font-weight: bold; }
+        .reader-head-btn.active { color: var(--main); border: 1px solid var(--main); background: rgba(0,0,0,0.5); }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-box { background: #1a1a1a; width: 85%; max-width: 320px; border-radius: 16px; padding: 24px; text-align: center; box-shadow: 0 20px 50px rgba(0,0,0,0.5); border: 1px solid #333; }
+        .m-btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; }
+        .btn-confirm { background: var(--main); color: white; }
+        .btn-cancel { background: #333; color: #aaa; }
+        
+        /* شريط التحكم بالسرعة (يظهر فقط عند التفعيل) */
+        #speed-control-box {
+            width: 100%; display: none; flex-direction: column; gap: 5px;
+            padding: 10px; border-bottom: 1px solid #333; margin-bottom: 10px;
+        }
+        #speed-control-box label { font-size: 10px; color: #ccc; text-align: center; }
+        
+        /* شريط التقدم العلوي (الجديد) */
+        #read-progress { position: fixed; top: 0; left: 0; height: 3px; background: var(--main); width: 0%; z-index: 2002; transition: width 0.1s; }
+
+        /* أزرار التنقل السريع */
+        .reader-nav-btns { display: flex; gap: 15px; padding: 30px 20px 100px 20px; justify-content: center; }
+        .reader-nav-btn { background: #333; color: white; border: 1px solid #555; padding: 12px 25px; border-radius: 30px; font-weight: bold; font-size: 14px; flex: 1; text-align: center; max-width: 150px; cursor: pointer; }
+        .reader-nav-btn:active { background: var(--main); border-color: var(--main); }
+        .reader-nav-btn.disabled { opacity: 0.5; pointer-events: none; }
+		/* زر المسح الفردي في السجل */
+.hist-item-con { display: flex; align-items: center; background: #1e1e1e; margin-bottom: 10px; border-radius: 8px; overflow: hidden; }
+.hist-del-btn { color: var(--danger); padding: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+.hist-del-btn:active { background: rgba(255, 68, 68, 0.2); transform: scale(0.9); }
+
+		/* تصميم مؤشر التحميل - يسمح باللمس من خلاله */
+.loader-con {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none; /* هذا هو السطر السحري لحل مشكلة اللمس */
+    z-index: 5;
+    text-align: center;
+}
+.loader-txt {
+    color: var(--main);
+    font-weight: bold;
+    font-size: 14px;
+    background: rgba(0,0,0,0.8);
+    padding: 5px 10px;
+    border-radius: 10px;
+    margin-top: 5px;
+}
+/* دائرة تحميل بسيطة */
+.spinner {
+    width: 24px; height: 24px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: var(--main);
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+
+/* تصميم قائمة سجل البحث */
+.history-list-con {
+    max-height: 200px;
+    overflow-y: auto;
+    background: #1a1a1a;
+    border-top: 1px solid #333;
+    display: none; /* مخفي افتراضياً */
+}
+.hist-search-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid #2a2a2a;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: #ccc;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.hist-search-item:active { background: #333; }
+.hist-txt { flex: 1; display:flex; align-items:center; gap:10px; }
+.hist-del { padding: 5px 10px; color: #555; }
+.hist-del:active { color: var(--danger); }
+
+/* خلفية القائمة (تعتيم الشاشة) */
+.quick-menu-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.6); /* خلفية شبه شفافة */
+    z-index: 1000;
+    display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(3px); /* تأثير ضبابي جميل */
+}
+/* صندوق القائمة */
+.quick-menu {
+    background: #252525; width: 85%; max-width: 320px;
+    border-radius: 16px; overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    transform: scale(0.9); opacity: 0;
+    transition: 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.quick-menu.show { transform: scale(1); opacity: 1; }
+/* رأس القائمة */
+.qm-header {
+    background: var(--main); color: white; padding: 16px;
+    font-weight: bold; text-align: center; font-size: 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+/* عناصر القائمة */
+.qm-item {
+    padding: 16px; border-bottom: 1px solid #333;
+    color: #eee; display: flex; align-items: center; gap: 12px;
+    font-size: 15px; cursor: pointer;
+}
+.qm-item:active { background: #333; }
+.qm-item:last-child { border: none; }
+
+
+/* تصميم شريط التصنيفات في المكتبة */
+.fav-tabs-con {
+    padding: 15px 10px 5px 10px; /* مسافة من الأعلى */
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+    border-bottom: 1px solid #333;
+    background: var(--bg);
+    position: sticky; /* يثبت الشريط عند التمرير */
+    top: 60px; /* تحت الهيدر مباشرة */
+    z-index: 90;
+}
+.f-tab {
+    padding: 8px 16px;
+    background: #252525;
+    border-radius: 20px;
+    font-size: 13px;
+    color: #aaa;
+    white-space: nowrap;
+    cursor: pointer;
+    border: 1px solid #333;
+    transition: 0.2s;
+}
+.f-tab.active {
+    background: var(--main);
+    color: white;
+    border-color: var(--main);
+    font-weight: bold;
+}
+/* إخفاء السهم الافتراضي للقائمة المنسدلة */
+select::-ms-expand { display: none; }
+
+/* تنسيق التقييم */
+.rating-box { margin: 1px 0; padding: 10px; background: rgba(0,0,0,0.2); border-radius: 8px; text-align: center; }
+.stars-con { display: flex; justify-content: center; gap: 5px; margin-bottom: 5px; }
+.star-ico { width: 28px; height: 28px; fill: #444; cursor: pointer; transition: 0.2s; }
+.star-ico.filled { fill: #ffc107; drop-shadow: 0 0 5px rgba(255, 193, 7, 0.5); }
+.star-ico:active { transform: scale(1.3); }
+.rating-info { font-size: 14px; color: #eee; font-weight: bold; }
+.r-score { color: #ffc107; font-size: 18px; }
+.r-max { font-size: 12px; color: #888; margin-right: 2px; }
+.r-count { font-size: 12px; color: #aaa; margin-left: 8px; font-weight: normal; }
+.r-msg { font-size: 11px; color: var(--main); margin-top: 5px; animation: fadeIn 0.5s; }
+@keyframes fadeIn { from { opacity:0; transform:translateY(-5px); } to { opacity:1; transform:translateY(0); } }
+
+/* تنسيق صفحة التعليقات */
+.comments-scroll-area {
+    height: calc(100% - 130px); /* المساحة المتبقية بين الرأس والقدم */
+    overflow-y: auto;
+    padding: 92px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* فقاعة التعليق */
+.chat-bubble {
+    background: #1E1E1E;
+    padding: 10px 14px;
+    border-radius: 12px;
+    border-bottom-left-radius: 2px; /* ذيل الفقاعة */
+    border: 1px solid #333;
+    max-width: 85%;
+    align-self: flex-start;
+    animation: fadeIn 0.3s ease;
+}
+
+.chat-user { color: #FFD700; font-size: 12px; font-weight: bold; display:block; margin-bottom:4px; }
+.chat-text { color: #fff; font-size: 14px; line-height: 1.4; }
+.chat-date { font-size: 10px; color: #777; text-align: right; margin-top: 5px; }
+
+/* شريط الإدخال السفلي */
+.chat-input-bar {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    height: 70px; background: #1a1a1a;
+    display: flex; align-items: center; gap: 8px; padding: 10px;
+    border-top: 1px solid #333; box-sizing: border-box;
+}
+
+.chat-input-bar input {
+    background: #333; border: none; color: white;
+    height: 40px; border-radius: 20px; padding: 0 15px; outline: none;
+}
+
+.send-btn {
+    width: 45px; height: 45px; border-radius: 50%;
+    background: var(--main); border: none; color: white;
+    font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+/* إصلاح مشكلة اختفاء التفاصيل تحت الصفحات الأخرى */
+#page-details {
+    z-index: 2005 !important; /* رقم أعلى من صفحة الأكثر شعبية (2000) */
+    position: fixed; /* ضمان التثبيت */
+}
+
+/* إصلاح مشكلة ظهور التعليقات خلف التفاصيل */
+#page-comments {
+    z-index: 2010 !important; /* رقم أعلى من صفحة التفاصيل (2005) */
+}
+
+/* إصلاح مشكلة اختفاء الفصول (رفع طبقة القارئ فوق الجميع) */
+#page-reader {
+    z-index: 2200 !important; /* رقم أعلى من التعليقات والتفاصيل */
+    position: fixed !important;
+    background: #000; /* خلفية سوداء لضمان عدم شفافة الصفحة */
+}
+
+.snow-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.snowflake {
+    position: absolute;
+    top: -30px; /* يبدأ من خارج الشاشة من الأعلى */
+    color: white;
+    font-family: Arial, sans-serif;
+    user-select: none;
+    text-shadow: 0 0 8px #fff, 0 0 15px #00d4ff; 
+    pointer-events: none;
+    /* حركة واحدة تجمع بين السقوط والتأرجح */
+    animation: fallAndSwing linear infinite;
+}
+
+@keyframes fallAndSwing {
+    0% {
+        transform: translateY(0) translateX(0) rotate(0deg);
+        opacity: 0;
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        /* ينزل إلى ما بعد نهاية الشاشة (110% من ارتفاع الشاشة) */
+        transform: translateY(110vh) translateX(50px) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+/* تصميم الشريط الزجاجي */
+
+
+/* خلفية التعتيم خلف الكرت */
+
+
+.news-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7); /* خلفية أغمق قليلاً للتركيز */
+    z-index: 20000; /* رقم عالي جداً ليظهر فوق الثلج والقارئ */
+    display: none; /* مخفي افتراضياً */
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(4px);
+}
+
+.news-card {
+    background: #1a1a1a;
+    width: 80%;
+    max-width: 300px;
+    padding: 25px 20px;
+    border-radius: 16px;
+    border: 1px solid var(--main);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+    text-align: center;
+    position: relative;
+    animation: popIn 0.3s cubic-bezier(0.18, 0.89, 0.32, 1.28);
+}
+
+.news-header {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--main);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.news-body {
+    color: #eee;
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+}
+
+.news-close-btn {
+    background: var(--main);
+    color: white;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 50px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+@keyframes popIn { 
+    from { transform: scale(0.5); opacity: 0; } 
+    to { transform: scale(1); opacity: 1; } 
+}
+
+
+.ch-dl-btn {
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #252525;
+    border: 1px solid #333;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.ch-dl-btn:active { transform: scale(0.9); }
+.ch-dl-btn.downloaded { background: rgba(0, 230, 118, 0.1); border-color: #00E676; color: #00E676; pointer-events: none; }
+
+
+/* تنسيق عنصر التحميل */
+/* البطاقة الرئيسية للمانجا */
+.down-card {
+    background: #1e1e1e;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* الجزء العلوي (صورة وعنوان) */
+.down-header {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+.down-poster {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+.down-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+/* قائمة الفصول داخل البطاقة */
+.down-ch-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+.down-ch-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252525;
+    padding: 10px;
+    border-radius: 8px;
+}
+.down-ch-name {
+    color: #ccc;
+    font-size: 14px;
+}
+.down-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* الأزرار */
+.btn-read-sm {
+    background: var(--main);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+.btn-del-sm {
+    background: rgba(255, 68, 68, 0.15);
+    color: #ff4444;
+    border: none;
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+}
+
+/* --- Google Play Style Rating (Giant Version) --- */
+.rating-box { 
+    background: rgba(255, 255, 255, 0.03); /* خلفية خفيفة جداً لتحديد حدود الصندوق */
+    padding: 25px 15px; /* تكبير الحشوة الداخلية */
+    margin-bottom: 20px; 
+    border-radius: 16px; /* تدوير الحواف أكثر */
+    border: 1px solid rgba(255,255,255,0.05); /* إطار خفيف */
+}
+
+.g-layout { 
+    display: flex; 
+    align-items: center; 
+    gap: 30px; /* زيادة المسافة الفاصلة بين الرقم والأشرطة */
+    padding: 0 10px; 
+}
+
+/* --- الجزء الأيسر (الرقم العملاق) --- */
+.g-left { 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    justify-content: center; 
+    min-width: 100px; /* مساحة أوسع للقسم الأيسر */
+}
+.g-big-score { 
+    font-size: 60px; /* رقم ضخم جداً */
+    font-weight: 800; 
+    color: #fff; 
+    line-height: 1; 
+    margin-bottom: 5px;
+}
+.g-stars-row { 
+    display: flex; 
+    gap: 4px; 
+    margin: 8px 0; 
+}
+.g-star-icon { 
+    width: 20px; /* نجوم كبيرة */
+    height: 20px; 
+    fill: #5f6368; 
+    cursor: pointer; 
+    transition: transform 0.2s, fill 0.2s;
+}
+.g-star-icon.active { 
+    fill: #FBC02D; 
+}
+.g-star-icon:active { transform: scale(1.3); }
+
+.g-total-txt { 
+    font-size: 13px; /* تكبير نص عدد المراجعات */
+    color: #bbb; 
+    font-weight: bold;
+}
+
+/* --- الجزء الأيمن (الأشرطة العريضة) --- */
+.g-right { 
+    flex: 1; 
+    display: flex; 
+    flex-direction: column; 
+    gap: 10px; /* مسافة مريحة بين الأشرطة */
+}
+.g-bar-item { 
+    display: flex; 
+    align-items: center; 
+    gap: 12px; 
+    font-size: 14px; /* أرقام كبيرة */
+    color: #ccc; 
+    font-weight: bold; 
+}
+.g-progress-bg { 
+    flex: 1; 
+    height: 14px; /* شريط سميك وواضح */
+    background: #3c4043; 
+    border-radius: 8px; 
+    overflow: hidden; 
+}
+.g-progress-fill { 
+    height: 100%; 
+    background: #FBC02D; 
+    border-radius: 8px; 
+    width: 0%; 
+    transition: width 0.5s ease; 
+}
+.g-perc-txt { 
+    font-size: 13px; /* نسبة مئوية واضحة */
+    color: #ddd; 
+    width: 40px; 
+    text-align: left; 
+    direction: ltr; 
+}
+
+/* تصميم شريط التبويبات */
+.tabs-header {
+    display: flex;
+    background: #151515; /* لون أغمق قليلاً */
+    border-bottom: 1px solid #333;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.tab-btn {
+    flex: 1;
+    padding: 15px 0;
+    text-align: center;
+    color: #888;
+    font-size: 14px;
+    font-weight: bold;
+    border-bottom: 3px solid transparent;
+    transition: 0.3s;
+}
+
+.tab-btn.active {
+    color: var(--main);
+    border-bottom-color: var(--main);
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* حاويات المحتوى */
+.tab-content {
+    display: none;
+    padding: 15px;
+    padding-bottom: 80px;
+    animation: fadeIn 0.3s ease;
+}
+.tab-content.active { display: block; }
+
+/* تنسيق قسم المعلومات */
+.info-layout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+.big-poster {
+    width: 140px;
+    border-radius: 8px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.6);
+    border: 2px solid #333;
+    margin-top: 10px;
+}
+.genre-tag {
+    background: #252525;
+    color: #ccc;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    border: 1px solid #333;
+    display: inline-block;
+    margin: 3px;
+}
+.story-box {
+    background: #1a1a1a;
+    padding: 15px;
+    border-radius: 10px;
+    border: 1px solid #333;
+    color: #ddd;
+    font-size: 13px;
+    line-height: 1.6;
+    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* ==========================================
+   تنسيقات نظام التحميل - أضف هذا في قسم الـ <style>
+   ========================================== */
+
+/* أزرار التحميل بجانب الفصول */
+.ch-dl-btn {
+    padding: 10px;
+    margin-right: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    width: 30px; 
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #252525;
+    border: 1px solid #333;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.ch-dl-btn:active { 
+    transform: scale(0.9); 
+}
+
+.ch-dl-btn.downloaded { 
+    background: rgba(0, 230, 118, 0.1); 
+    border-color: #00E676; 
+    color: #00E676; 
+    pointer-events: none; /* منع الضغط مرة أخرى */
+}
+
+/* البطاقة الرئيسية للمانجا في صفحة التحميلات */
+.down-card {
+    background: #1e1e1e;
+    border-radius: 12px;
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #333;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* الجزء العلوي (صورة وعنوان) */
+.down-header {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+
+.down-poster {
+    width: 60px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.down-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+}
+
+/* قائمة الفصول داخل البطاقة */
+.down-ch-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.down-ch-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #252525;
+    padding: 10px;
+    border-radius: 8px;
+}
+
+.down-ch-name {
+    color: #ccc;
+    font-size: 14px;
+}
+
+.down-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+/* الأزرار */
+.btn-read-sm {
+    background: var(--main);
+    color: white;
+    border: none;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-read-sm:active {
+    transform: scale(0.95);
+}
+
+.btn-del-sm {
+    background: rgba(255, 68, 68, 0.15);
+    color: #ff4444;
+    border: none;
+    width: 28px; 
+    height: 28px;
+    border-radius: 50%;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.btn-del-sm:active {
+    transform: scale(0.9);
+    background: rgba(255, 68, 68, 0.3);
+}
+
+/* مؤشر التحميل الدوار (Spinner) */
+.spinner {
+    width: 24px; 
+    height: 24px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    border-top-color: var(--main);
+    animation: spin 1s ease-in-out infinite;
+    margin: 0 auto;
+}
+
+@keyframes spin { 
+    to { transform: rotate(360deg); } 
+}
+
+/* تفعيل تسريع الهاردوير للعناصر المتحركة */
+.card, .ripple, .app-bar {
+    transform: translate3d(0, 0, 0); 
+    will-change: transform, opacity;
+}
+
+/* تحسين التمرير */
+.content-area, .ch-list, #page-reader {
+    -webkit-overflow-scrolling: touch; /* مهم جداً لنعومة التمرير في الهواتف */
+    scroll-behavior: smooth;
+}
+
+
+</style>
+  </head>
+  <body>
+
+    <svg style="display:none">
+	  <defs>
+		<symbol id="icon-crown" viewBox="0 0 24 24"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11h-5v1h5c1.1 0 2 .9 2 2v2h-5v-2h-3v2H8v-2H3v-2c0-1.1.9-2 2-2h5v-1H5z"/></symbol>
+		<symbol id="icon-star" viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></symbol>
+		<symbol id="icon-home" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></symbol>
+		<symbol id="icon-down" viewBox="0 0 24 24"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></symbol>
+		<symbol id="icon-trash" viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></symbol>
+		<symbol id="icon-fav" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></symbol>
+		<symbol id="icon-hist" viewBox="0 0 24 24"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></symbol>
+		<symbol id="icon-set" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c.59-.24 1.13-.57 1.62-.94l2.39.96c.22-.08-.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></symbol>
+		<symbol id="icon-search" viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></symbol>
+		<symbol id="icon-list" viewBox="0 0 24 24"><path d="M3 13h2v-2H3v2zm0 4h2v-2H3v2zm0-8h2V7H3v2zm4 4h14v-2H7v2zm0 4h14v-2H7v2zM7 7v2h14V7H7z"/></symbol>
+		<symbol id="icon-grid" viewBox="0 0 24 24"><path d="M4 11h5V5H4v6zm0 7h5v-6H4v6zm6 0h5v-6h-5v6zm6 0h5v-6h-5v6zm-6-7h5V5h-5v6zm6-6v6h5V5h-5z"/></symbol>
+		<symbol id="icon-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></symbol>
+		<symbol id="icon-pause" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></symbol>
+		<symbol id="icon-close" viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></symbol>
+		<symbol id="icon-share" viewBox="0 0 24 24"><path d="M18 16.08c-.76 0-1.44.3-1.96.77L8.91 12.7c.05-.23.09-.46.09-.7s-.04-.47-.09-.7l7.05-4.11c.54.5 1.25.81 2.04.81 1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3c0 .24.04.47.09.7L8.04 9.81C7.5 9.31 6.79 9 6 9c-1.66 0-3 1.34-3 3s1.34 3 3 3c.79 0 1.5-.31 2.04-.81l7.12 4.16c-.05.21-.08.43-.08.65 0 1.61 1.31 2.92 2.92 2.92 1.61 0 2.92-1.31 2.92-2.92s-1.31-2.92-2.92-2.92z"/></symbol>
+		<symbol id="icon-refresh" viewBox="0 0 24 24"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></symbol>
+		<symbol id="icon-dice" viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7.5 18c-.83 0-1.5-.67-1.5-1.5S6.67 15 7.5 15s1.5.67 1.5 1.5S8.33 18 7.5 18zm0-9C6.67 9 6 8.33 6 7.5S6.67 6 7.5 6 9 6.67 9 7.5 8.33 9 7.5 9zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4.5 4.5c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm0-9c-.83 0-1.5-.67-1.5-1.5S15.67 6 16.5 6s1.5.67 1.5 1.5S17.33 9 16.5 9z"/></symbol>
+		<symbol id="icon-done" viewBox="0 0 24 24"><path d="M18 7l-1.41-1.41-6.34 6.34 1.41 1.41L18 7zm4.24-1.41L11.66 16.17 7.48 12l-1.41 1.41L11.66 19l12-12-1.42-1.41zM.41 13.41L6 19l1.41-1.41L1.83 12 .41 13.41z"/></symbol>
+		<symbol id="icon-fit" viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></symbol>
+		<symbol id="icon-eye" viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></symbol>
+	  </defs>
+    </svg>
+
+    <div id="modal-overlay" class="modal-overlay">
+	  <div class="modal-box">
+		<div id="modal-title" class="modal-title"></div>
+		<div id="modal-body" class="modal-body"></div>
+		<textarea id="modal-input" class="modal-input" style="display:none"></textarea>
+		<div class="modal-btns">
+		  <button class="m-btn btn-cancel ripple" onclick="closeModal()">إلغاء</button>
+		  <button id="modal-confirm-btn" class="m-btn btn-confirm ripple">موافق</button>
+		</div>
+	  </div>
+    </div>
+
+    <div id="v-home" class="content-area">
+	  <div class="app-bar" id="app-bar">
+		<div class="logo">M x M</div>
+		<div class="head-actions">
+		  <div onclick="refreshHome()" class="ripple"><svg class="icon"><use href="#icon-refresh"></use></svg></div>
+		  <div onclick="openTopRated()" class="ripple"><svg class="icon" style="color:#FFD700"><use href="#icon-crown"></use></svg></div>
+		  <div onclick="pickRandom()" class="ripple"><svg class="icon"><use href="#icon-dice"></use></svg></div>
+		  <div onclick="toggleViewMode()" class="ripple"><svg class="icon"><use id="btn-view-icon" href="#icon-grid"></use></svg></div>
+		  <div onclick="togSearch()" class="ripple"><svg class="icon"><use href="#icon-search"></use></svg></div>
+		</div>
+	  </div> 
+	  <div id="search-box">
+		<input id="search-inp" class="inp" placeholder="ابحث عن مانجا..." onchange="goSearch(this.value)" onfocus="showHistory()" oninput="showHistory()">
+		<div id="search-history" class="history-list-con"></div>
+	  </div>
+
+	  <div id="quick-resume" class="ripple" onclick="resumeLastManga()">
+		<div class="qr-info"><span class="qr-title" id="qr-title"></span><span class="qr-ch" id="qr-ch"></span></div>
+		<div class="qr-btn"><svg class="icon-sm"><use href="#icon-play"></use></svg></div>
+	  </div>
+	  <div id="content-home" class="grid"></div>
+    </div>
+
+	<div id="v-fav" class="content-area" style="display:none">
+	  <div class="app-bar"><div class="logo">المكتبة</div></div>
+      <div class="fav-tabs-con">
+        <div class="f-tab active" onclick="filterFav('all', this)">الكل</div>
+        <div class="f-tab" onclick="filterFav('reading', this)">مستمر</div>
+        <div class="f-tab" onclick="filterFav('completed', this)">مكتمل</div>
+        <div class="f-tab" onclick="filterFav('plan', this)">لاحقاً</div>
+      </div>
+      <div id="content-fav" class="grid"></div>
+    </div>
+
+    </div>
+
+    <div id="v-hist" class="content-area" style="display:none">
+	  <div class="app-bar"><div class="logo">السجل</div></div>
+	  <div id="content-hist" class="history-list"></div>
+    </div>
+	<div id="v-down" class="content-area" style="display:none">
+	  <div class="app-bar"><div class="logo">التحميلات 📥</div></div>
+	  <div id="content-down" class="ch-list" style="padding-top:20px;"></div>
+	</div>
+
+	<div id="v-set" class="content-area" style="display:none">
+	  <div class="app-bar"><div class="logo">الحساب والإعدادات</div></div>
+	  <div class="settings-list">
+
+		<div id="auth-container" style="background:#1a1a1a; padding:20px; border-radius:12px; border:1px solid #333; margin-bottom:25px;">
+
+		  <div id="profile-view" style="display:none; text-align:center;">
+            <div id="profile-avatar" style="width:70px; height:70px; background:var(--main); border-radius:50%; margin:0 auto 10px auto; display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-weight:bold; box-shadow:0 5px 15px rgba(0,0,0,0.3);">U</div>
+            <h3 id="profile-name" style="margin:5px 0; color:white;">User Name</h3>
+            <p id="profile-email" style="margin:0 0 15px 0; color:#888; font-size:12px;"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a2f272b23260a2f322b273a262f64292527">[email&#160;protected]</a></p>
+
+            <div style="display:flex; gap:10px; justify-content:center;">
+			  <button onclick="syncNow()" style="background:#333; color:white; border:1px solid #555; padding:8px 15px; border-radius:20px; font-size:12px;">☁️ مزامنة المفضلة</button>
+			  <button onclick="logout()" style="background:rgba(255, 68, 68, 0.1); color:#ff4444; border:1px solid #ff4444; padding:8px 15px; border-radius:20px; font-size:12px;">تسجيل خروج</button>
+            </div>
+		  </div>
+
+		  <div id="login-view">
+            <h4 style="margin:0 0 15px 0; color:var(--main); text-align:center;">تسجيل الدخول / إنشاء حساب</h4>
+
+            <input id="inp-email" type="email" placeholder="البريد الإلكتروني" style="width:100%; box-sizing:border-box; padding:12px; background:#252525; border:1px solid #333; color:white; border-radius:8px; margin-bottom:10px; outline:none;">
+
+            <input id="inp-pass" type="password" placeholder="كلمة المرور" style="width:100%; box-sizing:border-box; padding:12px; background:#252525; border:1px solid #333; color:white; border-radius:8px; margin-bottom:10px; outline:none;">
+
+            <input id="inp-name" type="text" placeholder="الاسم المستعار" style="display:none; width:100%; box-sizing:border-box; padding:12px; background:#252525; border:1px solid #333; color:white; border-radius:8px; margin-bottom:10px; outline:none;">
+
+            <button id="btn-submit-auth" onclick="doLogin()" class="ripple" style="width:100%; padding:12px; background:var(--main); color:white; border:none; border-radius:8px; font-weight:bold; margin-bottom:10px;">تسجيل الدخول</button>
+
+
+            <button id="btn-toggle-mode" onclick="toggleSignup()" style="width:100%; padding:10px; background:transparent; color:#aaa; border:none; font-size:12px;">ليس لديك حساب؟ إنشاء حساب جديد</button>
+		  </div>
+		</div>
+		<button id="btn-google-auth" onclick="doGoogleLogin()" class="ripple" style="width:100%; padding:12px; background:#db4437; color:white; border:none; border-radius:8px; font-weight:bold; margin-bottom:15px; display:flex; align-items:center; justify-content:center; gap:10px;">
+		  <svg style="width:18px;height:18px;fill:white;" viewBox="0 0 24 24">
+			<path d="M12.545,10.239v3.821h5.445c-0.712,2.315-2.647,3.972-5.445,3.972c-3.332,0-6.033-2.701-6.033-6.032s2.701-6.032,6.033-6.032c1.498,0,2.866,0.549,3.921,1.453l2.814-2.814C17.503,2.988,15.139,2,12.545,2C7.021,2,2.543,6.477,2.543,12s4.478,10,10.002,10c8.396,0,10.249-7.85,9.426-11.748L12.545,10.239z"/>
+		  </svg>
+		  المتابعة باستخدام Google
+		</button>
+		
+		<div style="font-size:14px; color:#aaa; margin-bottom:10px; font-weight:bold;">المظهر والألوان</div>
+		<div class="color-grid">
+		  <div class="color-circle" style="background:#ff6b00" onclick="setTheme('#ff6b00')"></div>
+		  <div class="color-circle" style="background:#2979FF" onclick="setTheme('#2979FF')"></div>
+		  <div class="color-circle" style="background:#d500f9" onclick="setTheme('#d500f9')"></div>
+		  <div class="color-circle" style="background:#00E676" onclick="setTheme('#00E676')"></div>
+		</div>
+        <button class="set-btn ripple" onclick="confirmClearCache()">
+		  <span>مسح الكاش (تنظيف الصور المؤقتة)</span>
+		  <svg class="icon"><use href="#icon-trash"></use></svg>
+		</button>
+		<button class="set-btn ripple" onclick="openBackup()"><span>نسخ احتياطي للبيانات (محلي)</span><svg class="icon"><use href="#icon-set"></use></svg></button>
+		<button class="set-btn ripple" onclick="openRestore()"><span>استعادة البيانات (محلي)</span><svg class="icon"><use href="#icon-hist"></use></svg></button>
+
+		<div class="danger-zone">
+		  <button class="set-btn btn-red ripple" onclick="confirmClear()"><span>مسح جميع البيانات</span><svg class="icon"><use href="#icon-close"></use></svg></button>
+		</div>
+		<div style="text-align:center; color:#555; font-size:12px; margin-top:30px;">Version 8.5 (Stable)</div>
+	  </div>
+	</div>
+
+
+    <div id="page-details" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#121212; z-index:2000; overflow-y:auto;">
+
+	  <div style="padding:10px 15px; display:flex; justify-content:space-between; align-items:center; background:#1a1a1a; border-bottom:1px solid #222;">
+        <div onclick="closeDetails()" class="ripple" style="width:35px; height:35px; border-radius:50%; background:#333; display:flex; align-items:center; justify-content:center;">
+		  <svg class="icon"><use href="#icon-close"></use></svg>
+        </div>
+        <div id="d-header-title" style="font-weight:bold; font-size:14px; max-width:70%; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">تفاصيل المانجا</div>
+        <div style="width:35px;"></div> </div>
+
+	  <div class="tabs-header">
+        <div class="tab-btn active" onclick="switchTab('info', this)">معلومات</div>
+        <div class="tab-btn" onclick="switchTab('chapters', this)">الفصول</div>
+        <div class="tab-btn" onclick="switchTab('comments', this)">التعليقات</div>
+	  </div>
+
+	  <div id="view-info" class="tab-content active">
+        <div class="info-layout">
+		  <img id="d-poster" class="big-poster" src="" onerror="this.src='error.png'">
+
+		  <h2 id="d-title" style="margin:5px 0; text-align:center; font-size:18px;"></h2>
+
+		  <div class="rating-box" style="background:transparent; padding:0;">
+			<div class="stars-con" id="rating-stars"></div>
+			<div class="rating-info">
+			  <span id="rating-score" class="r-score">0.0</span> 
+			  <span id="rating-count" class="r-count">(0)</span>
+			</div>
+			<div id="rating-msg" class="r-msg" style="display:none"></div>
+		  </div>
+
+		  <div id="d-genres" style="text-align:center; display:flex; flex-wrap:wrap; justify-content:center;"></div>
+
+		  <div style="display:flex; gap:10px; width:100%; justify-content:center; margin:10px 0;">
+			<button id="btn-resume" class="action-btn ripple" onclick="resumeReading()" style="flex:1; background:var(--main);"><svg class="icon-sm"><use href="#icon-play"></use></svg> إكمال</button>
+			<button id="btn-fav" class="action-btn ripple" onclick="toggleFav()" style="flex:1;"><svg class="icon-sm"><use href="#icon-fav"></use></svg> <span id="fav-txt">مفضلة</span></button>
+			<button class="action-btn ripple" onclick="shareManga()" style="width:auto;"><svg class="icon-sm"><use href="#icon-share"></use></svg></button>
+		  </div>
+
+		  <div id="fav-status-con" style="display:none; width:100%;">
+			<select id="status-select" class="action-btn" onchange="changeStatus(this.value)" style="width:100%; text-align-last:center; border:1px solid #444;">
+			  <option value="reading">🟢 جاري القراءة</option>
+			  <option value="completed">✅ مكتملة</option>
+			  <option value="plan">⏳ خطط للقراءة</option>
+			</select>
+		  </div>
+
+		  <div style="width:100%; margin-top:10px;">
+			<div style="font-weight:bold; color:var(--main); margin-bottom:5px;">القصة:</div>
+			<div id="d-story" class="story-box">جاري التحميل...</div>
+		  </div>
+        </div>
+	  </div>
+
+	  <div id="view-chapters" class="tab-content">
+        <div class="ch-filter-con">
+		  <input class="ch-filter-inp" placeholder="🔍 رقم الفصل..." oninput="filterChapters(this.value)">
+		  <button class="ch-tool-btn ripple" onclick="markAllRead()"><svg class="icon-sm"><use href="#icon-done"></use></svg></button>
+		  <button class="ch-tool-btn ripple" onclick="reverseChapters()"><svg class="icon-sm"><use href="#icon-refresh"></use></svg></button>
+        </div>
+        <div id="d-chapters" class="ch-list"></div>
+	  </div>
+
+	  <div id="view-comments" class="tab-content">
+        <div id="comments-container"></div>
+        <div class="chat-input-bar" style="position:fixed; bottom:0; width:100%; left:0; z-index:2010;">
+		  <input type="text" id="chat-name" placeholder="الاسم" style="width:25%; text-align:center;">
+		  <input type="text" id="chat-msg" placeholder="اكتب تعليقك..." style="flex-grow:1;">
+		  <button onclick="sendChatComment()" class="send-btn">➤</button>
+        </div>
+	  </div>
+	</div>
+
+
+    <div id="page-reader" onclick="handleContainerClick(event)">
+	  <div id="brightness-overlay"></div>
+	  <div id="read-progress"></div>
+
+	  <div id="ui-top" class="reader-ui ui-top">
+		<div style="display:flex; gap:10px;">
+		  <button id="btn-auto-scroll" class="reader-head-btn" onclick="toggleAutoScroll(event)"><svg class="icon-sm"><use id="icon-auto-use" href="#icon-play"></use></svg> تلقائي</button>
+		  <div id="quality-settings" style="background: #1a1a1a; padding: 10px; display: flex; justify-content: center; gap: 10px; border-bottom: 1px solid #333;">
+			<span style="font-size: 13px; color: #888;">جودة الصور:</span>
+			<select id="quality-select" onchange="updateQuality()" style="background: #252525; color: #ff6b00; border: 1px solid #444; border-radius: 5px; font-size: 12px; padding: 2px 8px;">
+			  <option value="orig">فائقة (الأصلية)</option>
+			  <option value="high" selected>عالية (HD)</option>
+			  <option value="med">متوسطة (سريعة)</option>
+			  <option value="low">منخفضة (توفير)</option>
+			</select>
+		  </div>
+
+		  <button id="btn-eye-care" class="reader-head-btn" onclick="toggleEyeCare(event)"><svg class="icon-sm"><use href="#icon-eye"></use></svg></button>
+		</div>
+		<div onclick="closeReader()"><svg class="icon"><use href="#icon-close"></use></svg></div>
+	  </div>
+
+	  <div id="reader-imgs" style="padding-top:90px; padding-bottom:0; min-height:100vh;"></div>
+
+	  <div id="ui-bot" class="reader-ui ui-bot">
+		<div id="speed-control-box">
+		  <label>سرعة التمرير: 1</label>
+		  <input type="range" min="0.5" max="10" step="0.5" value="1" oninput="updateAutoScrollSpeed(this.value)" style="accent-color:var(--main); width:100%">
+		  <div style="display:flex; justify-content:space-between; font-size:9px; color:#666; margin-top:3px;">
+		    <span>بطيء</span>
+		    <span>متوسط</span>
+		    <span>سريع</span>
+		  </div>
+		</div>
+
+		<div class="range-con"><span>☀</span><input type="range" min="0" max="0.8" step="0.1" value="0" oninput="setBrightness(this.value)"></div>
+		<div class="bot-row">
+		  <button class="reader-tool ripple" onclick="toggleFitMode()"><svg class="icon-sm"><use href="#icon-fit"></use></svg> عرض</button>
+		  <button class="zoom-btn" onclick="changeZoom(-25)">-</button>
+		  <span id="zoom-txt" style="color:white; font-weight:bold; min-width:50px; text-align:center;">100%</span>
+		  <button class="zoom-btn" onclick="changeZoom(25)">+</button>
+		</div>
+	  </div>
+    </div>
+
+	<div class="nav">
+	  <div class="nav-item active ripple" onclick="nav('home',this)">
+		<svg class="icon"><use href="#icon-home"></use></svg>
+		<span class="nav-txt">الرئيسية</span>
+      </div>
+
+	  <div class="nav-item ripple" onclick="nav('fav',this)">
+		<svg class="icon"><use href="#icon-fav"></use></svg>
+		<span class="nav-txt">المفضلة</span>
+      </div>
+
+      <div class="nav-item ripple" onclick="nav('down',this)">
+		<svg class="icon"><use href="#icon-down"></use></svg>
+		<span class="nav-txt">تحميلات</span>
+      </div>
+
+	  <div class="nav-item ripple" onclick="nav('hist',this)">
+		<svg class="icon"><use href="#icon-hist"></use></svg>
+		<span class="nav-txt">السجل</span>
+      </div>
+
+	  <div class="nav-item ripple" onclick="nav('set',this)">
+		<svg class="icon"><use href="#icon-set"></use></svg>
+		<span class="nav-txt">إعدادات</span>
+      </div>
+    </div>
+
+	<div id="quick-menu-overlay" class="quick-menu-overlay" onclick="closeQuickMenu()">
+	  <div id="quick-menu-box" class="quick-menu" onclick="event.stopPropagation()">
+        <div id="qm-title" class="qm-header">عنوان المانجا</div>
+
+        <div class="qm-item" onclick="qmAction('fav')">
+		  <svg class="icon"><use href="#icon-heart"></use></svg> 
+		  <span>إضافة / حذف من المكتبة</span>
+        </div>
+
+        <div class="qm-item" onclick="qmAction('copy')">
+		  <svg class="icon"><use href="#icon-share"></use></svg> 
+		  <span>نسخ الرابط</span>
+        </div>
+
+        <div class="qm-item" onclick="qmAction('read')">
+		  <svg class="icon"><use href="#icon-play"></use></svg> 
+		  <span>قراءة الآن</span>
+        </div>
+	  </div>
+	</div>
+
+
+    <div id="toast" class="toast"></div>
+
+	<div id="page-comments" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:#121212; z-index:2000;">
+
+	  <div class="app-bar" style="border-bottom:1px solid #333;">
+        <div onclick="backToDetails()" class="ripple icon-btn">
+		  <svg class="icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </div>
+        <span class="logo" id="comm-page-title">التعليقات</span>
+	  </div>
+
+	  <div id="comments-container" class="comments-scroll-area"></div>
+
+	  <div class="chat-input-bar">
+        <input type="text" id="chat-name" placeholder="الاسم" maxlength="10" style="width:25%; text-align:center;">
+        <input type="text" id="chat-msg" placeholder="اكتب تعليقك..." class="msg-inp" style="flex-grow:1;">
+        <button onclick="sendChatComment()" class="send-btn">➤</button>
+	  </div>
+	</div>
+
+	<div id="page-top" class="app-page" style="display:none; background:#121212; z-index:1500; position:fixed; top:0; left:0; width:100%; height:100%;">
+
+	  <div class="app-bar">
+        <div onclick="closeTopRated()" class="ripple icon-btn">
+		  <svg class="icon"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        </div>
+        <span class="logo" style="color:#FFD700">الأكثر شعبية 🔥</span>
+	  </div>
+
+	  <div id="top-list" class="grid" style="padding-top:70px; padding-bottom:20px;"></div>
+	</div>
+
+	<div id="news-overlay" class="news-overlay">
+	  <div class="news-card">
+        <div class="news-header">
+		  <span style="font-size:20px">🔔</span> 
+		  <span>تنبيه</span>
+        </div>
+
+        <div id="news-content" class="news-body"></div>
+
+        <button onclick="closeNews()" class="news-close-btn">حسناً</button>
+	  </div>
+	</div>
+
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    let page=1, currData=null, chapterList=[], homeData=[], isLoading=false;
+    let currentChapter = {name: '', link: ''};
+    let isListView = false, isFitScreen = false;
+    let currentZoom = 100, touchStartDist = 0, startZoom = 100, isPinching = false;
+    
+    // 🆕 نظام التمرير التلقائي الجديد
+    let autoScrollRAF = null;  // requestAnimationFrame ID
+    let isAutoScrolling = false;
+    let autoScrollSpeed = 1;   // السرعة بالبكسل لكل إطار (1-10)
+    let isEyeCare = false;
+
+    function decode(s){try{return decodeURIComponent(escape(window.atob(s)));}catch(e){return "[]";}}
+
+    window.onload = function() {
+	window.addEventListener('beforeunload', () => {
+    // ✅ تنظيف Observer عند إغلاق الصفحة
+    if (imageObserver) {
+        imageObserver.disconnect();
+        imageObserver = null;
+    }
+    
+    // ✅ إلغاء جميع المؤقتات
+    if (searchTimeout) clearTimeout(searchTimeout);
+    if (scrollTimeout) clearTimeout(scrollTimeout);
+    // 🆕 إلغاء التمرير التلقائي الجديد
+    if (autoScrollRAF) cancelAnimationFrame(autoScrollRAF);
+});
+        const savedColor = localStorage.getItem('app_theme');
+        if(savedColor) document.documentElement.style.setProperty('--main', savedColor);
+        isListView = localStorage.getItem('view_mode') === 'list';
+        applyViewMode();
+        
+        // شريط التقدم
+        const reader = document.getElementById('page-reader');
+        reader.addEventListener('scroll', () => {
+            const h = reader.scrollHeight - reader.clientHeight;
+            const p = (reader.scrollTop / h) * 100;
+            document.getElementById('read-progress').style.width = p + '%';
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if(document.getElementById('page-reader').style.display === 'block') {
+                const el = document.getElementById('page-reader');
+                if(e.key === 'ArrowDown' || e.key === 'ArrowRight') el.scrollBy(0, 50);
+                if(e.key === 'ArrowUp' || e.key === 'ArrowLeft') el.scrollBy(0, -50);
+            }
+        });
+    };
+
+let isLoadingMore = false;
+let scrollTimeout = null;
+
+let lastScrollY = window.scrollY;
+window.addEventListener('scroll', () => {
+    if(document.getElementById('v-home').style.display !== 'block') return;
+    
+    // ✅ تحسين 1: استخدام requestAnimationFrame للسلاسة
+    if(scrollTimeout) return; // منع التنفيذ المتعدد
+    
+    scrollTimeout = setTimeout(() => {
+        scrollTimeout = null;
+        
+        // 1. إخفاء/إظهار الشريط العلوي
+        const header = document.getElementById('app-bar');
+        if(window.scrollY > lastScrollY && window.scrollY > 80) {
+            header.classList.add('hidden');
+        } else {
+            header.classList.remove('hidden');
+        }
+        lastScrollY = window.scrollY;
+
+        // 2. التمرير اللانهائي مع حماية ضد الطلبات المتعددة
+        if((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 1000) {
+            if (!isLoading && !isLoadingMore) { 
+                isLoading = true;
+                isLoadingMore = true; // ✅ حماية إضافية
+                
+                page++; 
+                const div = document.getElementById('content-home');
+                
+                if(!document.getElementById('home-loader')) {
+                    div.insertAdjacentHTML('beforeend', 
+                        '<div id="home-loader" style="grid-column:1/-1;text-align:center;padding:20px;color:#777"><div class="spinner" style="width:20px;height:20px;border-width:2px"></div></div>');
+                }
+                
+                Android.getHome(page);
+                
+                // ✅ إعادة تعيين بعد ثانية واحدة (حماية من التعليق)
+                setTimeout(() => { 
+                    isLoadingMore = false; 
+                }, 1000);
+            }
+        }
+    }, 50); // تأخير بسيط لتحسين الأداء
+});
+    
+    // 🆕 نظام التمرير التلقائي الجديد - سلس وفعال
+    function toggleAutoScroll(e) {
+        e.stopPropagation(); 
+        isAutoScrolling = !isAutoScrolling;
+        const btn = document.getElementById('btn-auto-scroll');
+        const icon = document.getElementById('icon-auto-use');
+        const speedBox = document.getElementById('speed-control-box');
+        
+        if(isAutoScrolling) {
+            btn.classList.add('active');
+            icon.setAttribute('href', '#icon-pause');
+            speedBox.style.display = 'flex';
+            startAutoScroll();
+        } else {
+            btn.classList.remove('active');
+            icon.setAttribute('href', '#icon-play');
+            speedBox.style.display = 'none';
+            stopAutoScroll();
+        }
+    }
+
+    // 🆕 تحديث السرعة - نظام أبسط وأوضح
+    function updateAutoScrollSpeed(val) {
+        // تحويل القيمة من 1-10 إلى سرعة فعلية
+        autoScrollSpeed = parseFloat(val);
+        
+        // عرض السرعة الحالية
+        const label = document.querySelector('#speed-control-box label');
+        if(label) {
+            label.textContent = `سرعة التمرير: ${val}`;
+        }
+    }
+
+    // 🆕 بدء التمرير التلقائي
+    function startAutoScroll() {
+        const reader = document.getElementById('page-reader');
+        
+        function scroll() {
+            if (!isAutoScrolling) return;
+            
+            // تمرير سلس بالسرعة المحددة
+            reader.scrollBy({
+                top: autoScrollSpeed,
+                behavior: 'instant' // بدون animation لضمان السلاسة
+            });
+            
+            // طلب الإطار التالي
+            autoScrollRAF = requestAnimationFrame(scroll);
+        }
+        
+        // بدء الحلقة
+        autoScrollRAF = requestAnimationFrame(scroll);
+    }
+
+    // 🆕 إيقاف التمرير التلقائي
+    function stopAutoScroll() {
+        if (autoScrollRAF) {
+            cancelAnimationFrame(autoScrollRAF);
+            autoScrollRAF = null;
+        }
+    }
+
+    // --- إصلاح اختفاء القوائم (النقر المفرد فقط) ---
+    function handleContainerClick(e) {
+        if (isPinching) return;
+        // إذا ضغطت على زر أو شريط تحكم، لا تفعل شيئاً
+        if(e.target.closest('.reader-ui') || e.target.closest('.zoom-btn') || e.target.closest('#speed-control-box') || e.target.closest('.reader-nav-btns')) return;
+        
+        // في كل الحالات الأخرى، اخفي القوائم
+        toggleUI();
+    }
+
+// دالة لإنشاء HTML أزرار التنقل
+function getNavButtonsHtml() {
+    if (!chapterList || chapterList.length === 0) return '';
+    
+    const currIdx = chapterList.findIndex(c => c.link === currentChapter.link);
+    const nextCh = chapterList[currIdx - 1]; 
+    const prevCh = chapterList[currIdx + 1]; 
+    
+    let html = '<div class="reader-nav-btns">';
+    const btnStyle = "flex:1;background:#333;color:white;border:1px solid #555;padding:12px 20px;border-radius:30px;font-weight:bold;text-align:center;max-width:150px;cursor:pointer;";
+    
+    if (prevCh) {
+        const safeName = prevCh.name.replace(/'/g, "&#39;");
+        const safeLink = prevCh.link.replace(/'/g, "&#39;");
+        html += `<div class="ripple reader-nav-btn" onclick="read('${safeLink}', '${safeName}')">السابق</div>`;
+    }
+    
+    if (nextCh) {
+        const safeName = nextCh.name.replace(/'/g, "&#39;");
+        const safeLink = nextCh.link.replace(/'/g, "&#39;");
+        html += `<div class="ripple reader-nav-btn" onclick="read('${safeLink}', '${safeName}')">التالي</div>`;
+    }
+    
+    html += '</div>';
+    return html;
+}
+
+// ==========================================
+//  محرك القراءة المطور (Pro Loader)
+// ==========================================
+
+// ==========================================
+// إعدادات المحرك الاحترافي (ImageKit Edition)
+// ==========================================
+
+// --- إعدادات المحرك والكاش الذكي ---
+
+// --- إعدادات المحرك والكاش الذكي والجودة ---
+const IMAGEKIT_ENDPOINT = "https://ik.imagekit.io/5rubirihy";
+const CACHE_DB_NAME = "MangaCacheDB";
+const EXPIRE_DAYS = 2; 
+const MAX_PARALLEL = 2; 
+
+let globalImagesList = [];
+let loadQueue = [];
+let activeDownloads = 0;
+let currentChapterB64 = ""; 
+
+// 1. فتح قاعدة البيانات (IndexedDB)
+async function openCacheDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(CACHE_DB_NAME, 2); // ✅ زيادة الإصدار إلى 2
+        
+        request.onupgradeneeded = (e) => {
+            const db = e.target.result;
+            
+            // إنشاء أو تحديث المخزن
+            if (!db.objectStoreNames.contains('images')) {
+                const store = db.createObjectStore('images');
+                // ✅ إضافة Index للبحث السريع حسب تاريخ الانتهاء
+                store.createIndex('expiry', 'expiry', { unique: false });
+            } else {
+                // إذا كان موجوداً، نضيف الـ Index فقط
+                const tx = e.target.transaction;
+                const store = tx.objectStore('images');
+                if (!store.indexNames.contains('expiry')) {
+                    store.createIndex('expiry', 'expiry', { unique: false });
+                }
+            }
+        };
+        
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => reject(request.error);
+    });
+}
+
+// 2. تنظيف الكاش القديم تلقائياً
+async function cleanOldCache() {
+    try {
+        const db = await openCacheDB();
+        const tx = db.transaction('images', 'readwrite');
+        const store = tx.objectStore('images');
+        const now = Date.now();
+        
+        // ✅ استخدام Index للبحث الأسرع
+        const index = store.index('expiry');
+        const range = IDBKeyRange.upperBound(now);
+        
+        index.openCursor(range).onsuccess = (e) => {
+            const cursor = e.target.result;
+            if (cursor) {
+                cursor.delete(); // حذف العنصر المنتهي
+                cursor.continue();
+            }
+        };
+    } catch (e) { 
+        console.error("Cache cleanup error", e); 
+    }
+}
+function sanitizeHTML(str) {
+    if (!str) return '';
+    const temp = document.createElement('div');
+    temp.textContent = str; // يحول أي HTML إلى نص عادي
+    return temp.innerHTML;
+}
+
+// 3. دالة جلب تحويلات الجودة لـ ImageKit
+function getQualityTransform() {
+    const qSelect = document.getElementById('quality-select');
+    const q = qSelect ? qSelect.value : 'high';
+    switch(q) {
+        case 'orig': return "tr:orig-true";
+        case 'high': return "tr:q-80,f-webp";
+        case 'med':  return "tr:q-60,w-800,f-webp";
+        case 'low':  return "tr:q-30,w-500,f-webp";
+        default:     return "tr:q-80,f-webp";
+    }
+}
+
+// 4. تحديث الجودة وإعادة تحميل الفصل
+function updateQuality() {
+    const q = document.getElementById('quality-select').value;
+    localStorage.setItem('user_quality_pref', q);
+    showToast("جاري تحديث الجودة...");
+    if (currentChapterB64) {
+        onImagesLoaded(currentChapterB64, true); 
+    }
+}
+
+// 5. المحرك الأساسي للتحميل مع نظام التبديل عند الفشل
+async function downloadImageWithProgress(originalUrl, index) {
+    try {
+        const db = await openCacheDB();
+        const tx = db.transaction('images', 'readonly');
+        const store = tx.objectStore('images');
+        
+        const qSelect = document.getElementById('quality-select');
+        const quality = qSelect ? qSelect.value : 'high';
+        const cacheKey = `${originalUrl}_${quality}`;
+
+        const cached = await new Promise(r => {
+            const req = store.get(cacheKey);
+            req.onsuccess = () => r(req.result);
+        });
+
+        if (cached && (Date.now() < cached.expiry)) {
+            displayImage(index, URL.createObjectURL(cached.blob));
+        } else {
+            // محاولة التحميل عبر ImageKit
+            fetchWithImageKit(originalUrl, index, db, quality);
+        }
+    } catch (e) {
+        handleFallback(index, originalUrl); // الفشل المباشر عند تعطل الـ DB
+    }
+}
+
+// 6. التحميل عبر ImageKit مع ميزة القفز للرابط الأصلي عند الخطأ
+function fetchWithImageKit(url, index, db, quality) {
+    const transform = getQualityTransform();
+    const proxyUrl = `${IMAGEKIT_ENDPOINT}/${transform}/${url}`;
+    
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', proxyUrl, true);
+    xhr.responseType = 'blob';
+
+    xhr.onprogress = (e) => {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const prog = document.getElementById(`prog-${index}`);
+            if (prog) prog.innerText = percent + "%";
+        }
+    };
+
+    xhr.onload = async () => {
+        if (xhr.status === 200) {
+            const blob = xhr.response;
+            const expiry = Date.now() + (EXPIRE_DAYS * 24 * 60 * 60 * 1000);
+            const saveTx = db.transaction('images', 'readwrite');
+            saveTx.objectStore('images').put({ blob, expiry }, `${url}_${quality}`);
+            displayImage(index, URL.createObjectURL(blob));
+        } else {
+            // إذا الخدمة أرجعت خطأ (مثلاً 404 أو انتهت الباقة)
+            handleFallback(index, url);
+        }
+    };
+
+    xhr.onerror = () => handleFallback(index, url); // إذا تعطل السيرفر تماماً
+    xhr.send();
+}
+
+// 7. الحل البديل: تحميل الصورة مباشرة من مصدرها الأصلي
+function handleFallback(index, originalUrl) {
+    console.warn("ImageKit failed, loading directly: " + index);
+    const img = document.getElementById(`img-${index}`);
+    const loader = document.getElementById(`loader-${index}`);
+    const prog = document.getElementById(`prog-${index}`);
+
+    if (prog) prog.innerText = "جاري المحاولة...";
+
+    img.src = originalUrl;
+    img.onload = () => {
+        displayImage(index, originalUrl); 
+    };
+
+    img.onerror = () => {
+        if (prog) {
+            prog.style.color = "red";
+            prog.innerHTML = 'فشل التحميل النهائي';
+        }
+        activeDownloads--;
+        processQueue();
+    };
+}
+
+// 8. عرض الصورة النهائية
+function displayImage(index, url) {
+    const img = document.getElementById(`img-${index}`);
+    const loader = document.getElementById(`loader-${index}`);
+    const con = document.getElementById(`con-${index}`);
+
+    if(!img) return;
+    img.src = url;
+    img.style.display = 'block';
+    con.style.minHeight = 'auto';
+    con.style.background = 'transparent';
+    if (loader) loader.style.display = 'none';
+    setTimeout(() => img.style.opacity = 1, 50);
+    
+    activeDownloads--;
+    processQueue();
+}
+
+// 9. الدوال المساعدة للطابور (Queue)
+let imageObserver = null;
+
+function onImagesLoaded(b64, isFromChange = false) {
+    try {
+        isNextChapterLoading = false;
+        currentChapterB64 = b64;
+        const d = JSON.parse(decode(b64));
+        globalImagesList = d.images || [];
+        loadQueue = [];
+        activeDownloads = 0;
+
+        const div = document.getElementById('reader-imgs');
+        if (globalImagesList.length === 0) {
+            div.innerHTML = '<div style="height:100vh;display:flex;justify-content:center;align-items:center;color:#ff4444;">⚠️ لا توجد صور</div>';
+            return;
+        }
+
+        let html = '';
+        globalImagesList.forEach((url, index) => {
+            loadQueue.push({ index: index, url: url });
+            html += `
+            <div id="con-${index}" class="p-con" style="position:relative; min-height:450px; margin: 0; padding: 0; background:#121212; display:flex; align-items:center; justify-content:center;">
+                <img id="img-${index}" class="p-img" data-index="${index}" data-src="${url}" style="width:100%; display:none; opacity:0; transition:opacity 0.4s ease-in-out;">
+                <div id="loader-${index}" class="loader-con" style="text-align:center;">
+                    <div class="spinner"></div>
+                    <div id="prog-${index}" style="margin-top:12px; font-size:16px; color:#ff6b00; font-family:monospace; font-weight:bold;">تحضير</div>
+                </div>
+                <div class="page-num" style="position:absolute; bottom:15px; right:15px; background:rgba(0,0,0,0.7); color:white; padding:5px 10px; font-size:11px; border-radius:20px; border:1px solid #333;">
+                    ${index + 1} / ${globalImagesList.length}
+                </div>
+            </div>`;
+        });
+
+        div.innerHTML = html + getNavButtonsHtml();
+
+        // ✅ تحسين 1: إنشاء Intersection Observer للتحميل الكسول
+        if (imageObserver) imageObserver.disconnect();
+        
+        imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const index = parseInt(img.dataset.index);
+                    const url = img.dataset.src;
+                    
+                    if (url && !img.src) {
+                        // بدء التحميل فقط عند الاقتراب من الصورة
+                        downloadImageWithProgress(url, index);
+                        imageObserver.unobserve(img); // إيقاف المراقبة بعد البدء
+                    }
+                }
+            });
+        }, { 
+            rootMargin: '800px', // بدء التحميل قبل 800px من الوصول للصورة
+            threshold: 0.01 
+        });
+
+        // مراقبة جميع الصور
+        document.querySelectorAll('.p-img').forEach(img => {
+            imageObserver.observe(img);
+        });
+
+        // ✅ تحسين 2: تحميل أول 3 صور فوراً (للتجربة السريعة)
+        for(let i = 0; i < Math.min(3, globalImagesList.length); i++) {
+            const img = document.getElementById(`img-${i}`);
+            if(img) {
+                downloadImageWithProgress(globalImagesList[i], i);
+            }
+        }
+
+        cleanOldCache();
+    } catch (e) { console.error(e); }
+}
+
+function processQueue() {
+    while (loadQueue.length > 0 && activeDownloads < MAX_PARALLEL) {
+        const item = loadQueue.shift();
+        activeDownloads++;
+        downloadImageWithProgress(item.url, item.index);
+    }
+}
+
+
+
+
+
+
+    // --- إضافة أزرار التنقل ---
+    function appendNavButtons() {
+        const div = document.getElementById('reader-imgs');
+        const currIdx = chapterList.findIndex(c => c.link === currentChapter.link);
+        const nextCh = chapterList[currIdx - 1]; 
+        const prevCh = chapterList[currIdx + 1]; 
+        
+        let html = '<div class="reader-nav-btns">';
+        const btnStyle = "flex:1;background:#333;color:white;border:1px solid #555;padding:12px 20px;border-radius:30px;font-weight:bold;text-align:center;max-width:150px;cursor:pointer;";
+        
+        if (prevCh) html += `<div class="ripple" style="${btnStyle}" onclick="read('${prevCh.link}', '${prevCh.name}')">السابق</div>`;
+        if (nextCh) html += `<div class="ripple" style="${btnStyle}" onclick="read('${nextCh.link}', '${nextCh.name}')">التالي</div>`;
+        
+        html += '</div>';
+        div.innerHTML += html;
+    }
+	
+
+
+    // --- بقية الدوال (بدون تغيير) ---
+    function toggleEyeCare(e) { e.stopPropagation(); isEyeCare = !isEyeCare; const btn = document.getElementById('btn-eye-care'); const imgs = document.getElementById('reader-imgs'); if(isEyeCare) { btn.classList.add('active'); imgs.classList.add('sepia-mode'); } else { btn.classList.remove('active'); imgs.classList.remove('sepia-mode'); } }
+    function closeReader(){ 
+    // الخروج من وضع الشاشة الكاملة
+    try { Android.toggleFullscreen(false); } catch(e){}
+
+    document.getElementById('page-reader').style.display='none'; 
+    if(isAutoScrolling) toggleAutoScroll({stopPropagation:()=>{}, currentTarget: document.getElementById('btn-auto-scroll')}); 
+}
+
+    function showSkeleton() { const div = document.getElementById('content-home'); let h = ''; for(let i=0; i<6; i++) { h += `<div class="card skeleton"></div>`; } div.innerHTML = h; }
+    function refreshHome() { page = 1; homeData = []; document.getElementById('content-home').innerHTML = ''; showSkeleton(); Android.getHome(1); }
+    function pickRandom() { if(homeData.length > 0) { const rand = homeData[Math.floor(Math.random() * homeData.length)]; openDetails(rand.title, rand.img, rand.link); showToast("🎲 " + rand.title); } else { showToast("انتظر التحميل..."); } }
+        // === استبدل دالة onHomeLoaded بهذه النسخة ===
+    function onHomeLoaded(b64){ 
+    isLoading = false; 
+    isLoadingMore = false; // ✅ إضافة هذا السطر
+    
+    // حذف مؤشر التحميل السفلي إن وجد
+    const loader = document.getElementById('home-loader');
+    if(loader) loader.remove();
+
+    const d = JSON.parse(decode(b64)); 
+    const div = document.getElementById('content-home'); 
+    
+    // مسح الشاشة فقط إذا كنا في الصفحة الأولى
+    if(page === 1) { 
+        div.innerHTML = ''; 
+        homeData = []; 
+    } 
+    
+    if(d.length === 0) {
+        if(page === 1) div.innerHTML = '<div style="text-align:center;padding:50px;color:#777">لا توجد نتائج</div>';
+        return; 
+    } 
+    
+    homeData = homeData.concat(d); 
+    let h = ''; 
+    d.forEach(m => h += card(m)); 
+    div.innerHTML += h; // إضافة البطاقات الجديدة تحت القديمة
+    
+    applyViewMode();
+    checkQuickResume(); 
+}
+
+    // استبدل دالة onDetailsLoaded ودالة renderChapters في ملف index.html بهذا الكود:
+
+function onDetailsLoaded(b64){
+    try {
+        // فك التشفير
+        const d = JSON.parse(decode(b64));
+        
+        // تحديث القائمة (إذا كانت null نضع مصفوفة فارغة)
+        chapterList = d.chapters || [];
+        
+        // عرض القصة
+        const storyBox = document.getElementById('d-story');
+        if(storyBox) storyBox.innerText = d.story || "لا يوجد وصف متاح.";
+
+        // عرض التصنيفات
+        const gDiv = document.getElementById('d-genres');
+        if(gDiv) {
+            gDiv.innerHTML = '';
+            if(d.genres && d.genres.length > 0) {
+                // إزالة التكرار وعرض التصنيفات
+                [...new Set(d.genres)].forEach(g => {
+                    gDiv.innerHTML += `<span class="genre-tag">${g}</span>`;
+                });
+            }
+        }
+
+        // رسم الفصول وتحديث زر الاستئناف
+        renderChapters();
+        updateResumeButton();
+
+        // حفظ صورة الغلاف في الذاكرة المحلية
+        let covers = JSON.parse(localStorage.getItem('manga_covers') || '{}');
+        if(currData && currData.title) {
+            covers[currData.title] = currData.img;
+            localStorage.setItem('manga_covers', JSON.stringify(covers));
+        }
+
+    } catch(e) {
+        console.error("Error parsing details:", e);
+        document.getElementById('d-chapters').innerHTML = '<div style="text-align:center;padding:20px;color:#ff4444">حدث خطأ في معالجة البيانات</div>';
+    }
+}
+
+function renderChapters(filterText = '') { 
+    const div = document.getElementById('d-chapters'); 
+    
+    if(chapterList.length === 0){ 
+        div.innerHTML = '<div style="text-align:center;padding:20px;color:#777">لا توجد فصول متاحة</div>'; 
+        return; 
+    } 
+    
+    const history = JSON.parse(localStorage.getItem('manga_history') || '{}'); 
+    const mangaHistory = history[currData.title] || { read: [] }; 
+    let h = ''; 
+    
+    chapterList.forEach(c => { 
+        if(filterText && !c.name.includes(filterText)) return; 
+        
+        const isRead = mangaHistory.read.includes(c.link) ? 'read' : ''; 
+        const isDownloaded = localStorage.getItem('dl_' + c.link) === 'true';
+        const dlIcon = isDownloaded ? '✅' : '⬇️';
+        const dlClass = isDownloaded ? 'downloaded' : '';
+        const safeName = c.name.trim();
+
+        h += `<div class="ch-item ${isRead}">
+                <div style="flex:1; display:flex; align-items:center; gap:10px;">
+                    ${isRead ? `<div onclick="toggleReadMark(event, '${c.link}')" style="color:var(--main); cursor:pointer; font-size:18px; padding:5px;">✓</div>` : ''}
+                    <div onclick="read('${c.link}', '${safeName}')" style="flex:1;">
+                        <span>${safeName}</span>
+                        <span class="ch-tag">${isRead ? 'مقروء' : 'قراءة'}</span>
+                    </div>
+                </div>
+                
+                <div style="display:flex; gap:10px; align-items:center;">
+                    ${!isRead ? `<div onclick="toggleReadMark(event, '${c.link}')" style="color:#555; cursor:pointer; font-size:16px; padding:5px;">☐</div>` : ''}
+                    
+                    <div id="btn-dl-${btoa(c.link)}" 
+                         class="ch-dl-btn ${dlClass}" 
+                         onclick="event.stopPropagation(); downloadChapter(this, '${c.link}', '${safeName}')">
+                        ${dlIcon}
+                    </div>
+                </div>
+              </div>`; 
+    }); 
+    
+    div.innerHTML = h || '<div style="text-align:center;padding:20px;color:#777">لا توجد نتائج مطابقة</div>'; 
+}
+
+
+    function markAllRead() { if(confirm("تعليم الكل كمقروء؟")) { let history = JSON.parse(localStorage.getItem('manga_history') || '{}'); if(!history[currData.title]) { history[currData.title] = { last: null, read: [] }; } chapterList.forEach(c => { if(!history[currData.title].read.includes(c.link)) history[currData.title].read.push(c.link); }); localStorage.setItem('manga_history', JSON.stringify(history)); renderChapters(); showToast("تم ✅"); } }
+    function filterChapters(val) { renderChapters(val); }
+    function setupTouchGestures() { 
+    const reader = document.getElementById('page-reader'); 
+    
+    reader.addEventListener('touchstart', (e) => { 
+        if (e.touches.length === 0) { 
+            isPinching = true; 
+            touchStartDist = Math.hypot(
+                e.touches[0].pageX - e.touches[0].pageX, 
+                e.touches[0].pageY - e.touches[0].pageY
+            ); 
+            startZoom = currentZoom; 
+            
+            // اهتزاز خفيف عند البدء
+            if(navigator.vibrate) navigator.vibrate(20);
+        } 
+    }, { passive: false }); 
+    
+    reader.addEventListener('touchmove', (e) => { 
+        if (isPinching && e.touches.length === 2) { 
+            e.preventDefault(); 
+            const dist = Math.hypot(
+                e.touches[0].pageX - e.touches[1].pageX, 
+                e.touches[0].pageY - e.touches[1].pageY
+            ); 
+            const scale = dist / touchStartDist; 
+            let newZoom = startZoom * scale; 
+            
+            // حدود محسّنة
+            if (newZoom < 50) newZoom = 50; 
+            if (newZoom > 125) newZoom = 125; 
+            
+            currentZoom = newZoom; 
+            applyZoom(); 
+        } 
+    }, { passive: false }); 
+    
+    reader.addEventListener('touchend', (e) => { 
+        if (isPinching && e.touches.length < 2) {
+            isPinching = false; 
+            
+            // اهتزاز خفيف عند الانتهاء
+            if(navigator.vibrate) navigator.vibrate(20);
+        }
+    }); 
+}
+    function changeZoom(amt) { 
+    currentZoom += amt; 
+    
+    // حدود أوسع وأكثر مرونة
+    if(currentZoom < 50) currentZoom = 50; 
+    if(currentZoom > 125) currentZoom = 125; 
+    
+    applyZoom(); 
+    
+    // رسالة توضيحية
+    if(currentZoom === 50) showToast("الحد الأدنى للتكبير 🔍");
+    else if(currentZoom === 125) showToast("الحد الأقصى للتكبير 🔍");
+}
+    function applyZoom() { 
+    updateZoomUI();
+    
+    // ✅ استخدام requestAnimationFrame للحركة السلسة
+    requestAnimationFrame(() => {
+        document.querySelectorAll('.p-img').forEach(img => { 
+            img.style.width = currentZoom + '%'; 
+            img.style.transition = 'width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94)';
+        }); 
+    });
+}
+    function updateZoomUI() { 
+    const txt = document.getElementById('zoom-txt');
+    txt.innerText = Math.round(currentZoom) + '%';
+    
+    // تغيير اللون حسب مستوى الزوم
+    if(currentZoom === 100) {
+        txt.style.color = 'white';
+    } else if(currentZoom > 100) {
+        txt.style.color = '#4CAF50'; // أخضر عند التكبير
+    } else {
+        txt.style.color = '#FF9800'; // برتقالي عند التصغير
+    }
+}
+    function toggleUI(){ const t=document.getElementById('ui-top'); const b=document.getElementById('ui-bot'); t.classList.toggle('ui-hide'); b.classList.toggle('ui-hide-b'); }
+    function toggleFitMode() { isFitScreen = !isFitScreen; applyFitMode(); showToast(isFitScreen ? "وضع: ملء الشاشة" : "وضع: عرض كامل"); }
+    function applyFitMode() { const imgs = document.querySelectorAll('.p-img'); imgs.forEach(img => { if(isFitScreen) img.classList.add('fit-screen'); else img.classList.remove('fit-screen'); }); }
+    function shareManga() { if (navigator.share) { navigator.share({ title: currData.title, text: 'اقرأ: ' + currData.title, url: currData.link }).catch((error) => console.log('Error sharing', error)); } else { const dummy = document.createElement("textarea"); document.body.appendChild(dummy); dummy.value = currData.title + " - " + currData.link; dummy.select(); document.execCommand("copy"); document.body.removeChild(dummy); showToast("تم نسخ الرابط"); } }
+    function checkQuickResume() { 
+    const last = JSON.parse(localStorage.getItem('last_read_global')); 
+    const box = document.getElementById('quick-resume'); 
+    
+    if(last) { 
+        box.style.display = 'flex'; 
+        document.getElementById('qr-title').innerText = last.title; 
+        document.getElementById('qr-ch').innerText = last.chapter; 
+        
+        // === التعديل: تمرير بيانات المانجا ===
+        box.onclick = function() { 
+            const mangaData = {
+                title: last.title,
+                img: last.img,
+                link: last.mangaLink || ''
+            };
+            read(last.link, last.chapter, mangaData); 
+        } 
+    } else { 
+        box.style.display = 'none'; 
+    } 
+}
+	function updateResumeButton(){ 
+    const history = JSON.parse(localStorage.getItem('manga_history') || '{}'); 
+    const mangaData = history[currData.title]; 
+    const btn = document.getElementById('btn-resume'); 
+    
+    if(mangaData && mangaData.last) { 
+        btn.style.display = 'flex'; 
+        
+        // التصحيح: تحديث نص الزر مباشرة بدلاً من البحث عن عنصر مفقود
+        btn.innerHTML = `<svg class="icon-sm"><use href="#icon-play"></use></svg> إكمال (${mangaData.last.name})`; 
+        
+        // أهم خطوة: تخزين الرابط داخل الزر ليعمل عند الضغط
+        btn.dataset.link = mangaData.last.link; 
+        btn.dataset.name = mangaData.last.name; 
+    } else { 
+        btn.style.display = 'none'; 
+    } 
+}
+
+    function resumeReading() { 
+    const btn = document.getElementById('btn-resume'); 
+    
+    if(btn.dataset.link) {
+        // === التعديل: استخدام currData الموجودة (لأننا في صفحة التفاصيل) ===
+        read(btn.dataset.link, btn.dataset.name, currData); 
+    }
+}
+	function toggleViewMode() { isListView = !isListView; localStorage.setItem('view_mode', isListView ? 'list' : 'grid'); applyViewMode(); }
+    function applyViewMode() { const grid = document.getElementById('content-home'); const icon = document.getElementById('btn-view-icon'); if(isListView) { grid.classList.add('list-mode'); icon.setAttribute('href', '#icon-list'); } else { grid.classList.remove('list-mode'); icon.setAttribute('href', '#icon-grid'); } }
+    function openDetails(t, i, l) {
+    currData = { title: t, img: i, link: l };
+
+    document.getElementById('d-title').innerText = t;
+    document.getElementById('d-header-title').innerText = t; // العنوان الصغير
+    document.getElementById('d-poster').src = i;
+    document.getElementById('d-story').innerText = "جاري جلب القصة..."; // نص مؤقت
+    
+    document.getElementById('page-details').style.display = 'block';
+
+    // إعادة التبويب إلى "معلومات" تلقائياً
+    switchTab('info', document.querySelectorAll('.tab-btn')[0]);
+
+    // تنظيف البيانات القديمة
+    document.getElementById('d-chapters').innerHTML = '<div style="text-align:center;padding:20px;color:#777">جاري التحميل...</div>';
+    document.getElementById('d-genres').innerHTML = '';
+    document.getElementById('comments-container').innerHTML = ''; 
+    document.getElementById('rating-stars').innerHTML = ''; // تفريغ النجوم
+    document.getElementById('btn-resume').style.display = 'none';
+
+    checkFav();
+    
+    // طلب البيانات
+    Android.getDetails(l);
+    try { Android.getRating(l); } catch(e) {}
+}
+
+    
+        
+function read(url, name, mangaData) {
+    try { Android.toggleFullscreen(true); } catch(e){} 
+
+    currentChapter = { link: url, name: name };
+    
+    // === إذا تم تمرير بيانات المانجا، نستخدمها، وإلا نستخدم currData الحالية ===
+    if (mangaData) {
+        currData = mangaData;
+    }
+    
+    // === حفظ السجل ===
+    let history = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    if(!history[currData.title]) {
+        history[currData.title] = { last: null, read: [] };
+    }
+    
+    // حفظ آخر فصل مع الوقت
+    history[currData.title].last = {
+        link: url,
+        name: name,
+        time: Date.now()
+    };
+    
+    // إضافة الفصل لقائمة المقروءة إن لم يكن موجوداً
+    if(!history[currData.title].read.includes(url)) {
+        history[currData.title].read.push(url);
+    }
+    
+    localStorage.setItem('manga_history', JSON.stringify(history));
+
+    // حفظ سجل عام للاستئناف السريع
+   localStorage.setItem('last_read_global', JSON.stringify({
+        title: currData.title,
+        chapter: name,
+        link: url,
+        img: currData.img,
+        mangaLink: currData.link  // === إضافة رابط المانجا ===
+    }));
+
+    // تحديث زر الاستئناف
+    checkQuickResume();
+    
+    // تحديث قائمة الفصول إذا كانت صفحة التفاصيل مفتوحة
+    if(document.getElementById('page-details').style.display === 'block') {
+        renderChapters(); // تحديث القائمة لتظهر الفصل كمقروء
+        updateResumeButton(); // تحديث زر الاستئناف
+    }
+    // ==================
+    
+    // إظهار القارئ
+    const reader = document.getElementById('page-reader');
+    reader.style.display = 'block';
+    reader.scrollTop = 0;
+    
+    // عرض مؤشر تحميل
+    document.getElementById('reader-imgs').innerHTML = `
+        <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#ccc;">
+            <div class="spinner"></div>
+            <h3 style="margin-top:20px">جاري جلب الفصل...</h3>
+            <p style="font-size:12px; opacity:0.7">${name}</p>
+        </div>`;
+
+    // التحقق من الكاش
+    const cached = JSON.parse(localStorage.getItem('cached_chapter_data') || 'null');
+    
+    if (cached && cached.link === url) {
+        onImagesLoaded(cached.b64, true);
+    } else {
+        Android.getImages(url);
+    }
+}
+
+
+function card(m) {
+    const history = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    let badgeHtml = '';
+    
+    // شارة "قرأت"
+    if (history[m.title] && history[m.title].read.length > 0) {
+        badgeHtml = `<div class="card-badge" style="position:absolute;top:5px;left:5px;background:var(--main);color:white;font-size:9px;padding:2px 6px;border-radius:4px;z-index:2">قرأت</div>`;
+    }
+
+    // ✅ تشفير البيانات لتمريرها بأمان
+    const dataStr = encodeURIComponent(JSON.stringify(m));
+    
+    // ✅ حماية النصوص من XSS
+    const safeTitle = sanitizeHTML(m.title);
+
+    return `<div class="card" 
+                ontouchstart="startLongPress(this, '${dataStr}')" 
+                ontouchend="endLongPress()" 
+                ontouchmove="cancelLongPress()"
+                onclick="if(!isLongPressEvent) openDetails('${m.title.replace(/'/g, "\\'")}','${m.img.replace(/'/g, "\\'")}','${m.link.replace(/'/g, "\\'")}')">
+                <img src="${m.img}" loading="lazy" alt="${safeTitle}">
+                ${badgeHtml}
+                <div class="card-grad"><div class="card-title">${safeTitle}</div></div>
+            </div>`;
+}
+
+    function nav(p,el){ 
+    document.querySelectorAll('.content-area').forEach(d => d.style.display='none'); 
+    document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); 
+    el.classList.add('active'); 
+    
+    if(p==='home') { document.getElementById('v-home').style.display='block'; checkQuickResume(); } 
+    if(p==='fav'){ document.getElementById('v-fav').style.display='block'; loadFav(); } 
+    if(p==='hist'){ document.getElementById('v-hist').style.display='block'; loadHistory(); } 
+    
+    // --- التعديل هنا ---
+    if(p==='set'){ 
+        document.getElementById('v-set').style.display='block'; 
+        updateProfileUI(); // تحديث الواجهة فوراً عند دخول الإعدادات
+    } 
+    // -------------------
+    
+    if(p==='down'){ document.getElementById('v-down').style.display='block'; loadDownloads(); }
+}
+
+    function checkFav(){ 
+    const l = JSON.parse(localStorage.getItem('fav')||'[]'); 
+    const item = l.find(x => x.title === currData.title); 
+    const btn = document.getElementById('btn-fav'); 
+    const txt = document.getElementById('fav-txt'); 
+    const statusCon = document.getElementById('fav-status-con');
+    const select = document.getElementById('status-select');
+
+    if(item){ 
+        btn.classList.add('active'); 
+        txt.innerText = "موجود بالمكتبة"; 
+        // إظهار قائمة الحالة وتحديد القيمة المحفوظة
+        statusCon.style.display = 'block';
+        // إذا كان العنصر قديماً ولا يملك حالة، نعتبره reading
+        select.value = item.status || 'reading';
+    } else { 
+        btn.classList.remove('active'); 
+        txt.innerText = "إضافة للمكتبة"; 
+        statusCon.style.display = 'none';
+    } 
+}
+
+    function toggleFav(){ 
+    let l = JSON.parse(localStorage.getItem('fav')||'[]'); 
+    const idx = l.findIndex(x => x.title === currData.title); 
+    
+    if(idx > -1) {
+        l.splice(idx, 1); // حذف
+        showToast("تم الحذف من المكتبة 🗑️");
+    } else {
+        // إضافة مع حالة افتراضية
+        currData.status = 'reading'; 
+        l.unshift(currData);
+        showToast("تمت الإضافة للمكتبة ❤️");
+    }
+    localStorage.setItem('fav', JSON.stringify(l)); 
+    checkFav(); 
+}
+
+    let currentFavFilter = 'all';
+
+function loadFav() { 
+    const l = JSON.parse(localStorage.getItem('fav')||'[]'); 
+    const div = document.getElementById('content-fav');
+    
+    // تصفية القائمة بناءً على التبويب المختار
+    const filtered = l.filter(m => {
+        // للمانجات القديمة التي ليس لها حالة، نعتبرها 'reading'
+        const s = m.status || 'reading';
+        if(currentFavFilter === 'all') return true;
+        return s === currentFavFilter;
+    });
+
+    let h = ''; 
+    filtered.forEach(m => h += card(m)); 
+    
+    if(filtered.length === 0) {
+        div.innerHTML = '<div style="text-align:center;padding:50px;color:#777;grid-column:1/-1">' +
+                        (currentFavFilter === 'all' ? 'المكتبة فارغة' : 'لا يوجد مانجا في هذا التصنيف') + 
+                        '</div>'; 
+    } else {
+        div.innerHTML = h;
+    }
+}
+
+// دالة جديدة لتغيير التبويب
+function filterFav(type, btn) {
+    currentFavFilter = type;
+    // تحديث شكل الأزرار
+    document.querySelectorAll('.f-tab').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    // إعادة تحميل القائمة
+    loadFav();
+}
+
+    function loadHistory(){
+    const hist = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    const covers = JSON.parse(localStorage.getItem('manga_covers') || '{}');
+    const div = document.getElementById('content-hist');
+    
+    let arr = [];
+    for (let title in hist) {
+        if(hist[title].last) { 
+            arr.push({ 
+                title: title, 
+                data: hist[title].last, 
+                img: covers[title] || 'error.png' 
+            }); 
+        }
+    }
+    
+    // ترتيب حسب الأحدث
+    arr.sort((a,b) => b.data.time - a.data.time);
+    
+    if(arr.length === 0) { 
+        div.innerHTML = '<div style="text-align:center;padding:50px;color:#777">السجل فارغ</div>'; 
+        return; 
+    }
+    
+    let h = '';
+    arr.forEach(item => {
+        // حماية النصوص من الفواصل لتجنب الأخطاء
+        const safeTitle = item.title.replace(/'/g, "\\'");
+        const safeImg = item.img.replace(/'/g, "\\'");
+        const safeLink = item.data.link.replace(/'/g, "\\'");
+        const safeName = item.data.name.replace(/'/g, "\\'");
+
+        h += `<div class="hist-item-con">
+            <div onclick="readFromHistory('${safeTitle}', '${safeImg}', '${safeLink}', '${safeName}')" style="display:flex;align-items:center;gap:10px;flex:1;padding:10px; cursor:pointer;">
+                <img src="${item.img}" style="width:40px;height:60px;object-fit:cover;border-radius:4px">
+                <div>
+                    <div style="font-weight:bold;font-size:13px">${item.title}</div>
+                    <div style="color:var(--main);font-size:11px">${item.data.name}</div>
+                </div>
+            </div>
+            <div class="hist-del-btn" onclick="deleteFromHistory('${safeTitle}')">
+                <svg class="icon-sm"><use href="#icon-close"></use></svg>
+            </div>
+        </div>`;
+    });
+    div.innerHTML = h;
+}
+
+     function deleteFromHistory(title) {
+    // 1. جلب السجل الحالي
+    let hist = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    
+    // 2. بدلاً من حذف كل شيء، نحذف فقط "آخر فصل مقروء"
+    if(hist[title]) {
+        hist[title].last = null; // حذف آخر فصل فقط
+        hist[title].time = null; // حذف الوقت
+        // ✅ نبقي على قائمة الفصول المقروءة (read)
+    }
+    
+    // 3. حفظ السجل المعدّل
+    localStorage.setItem('manga_history', JSON.stringify(hist));
+    
+    // 4. تحديث "الاستئناف السريع" إذا كانت هي المانجا المحذوفة
+    const lastGlobal = JSON.parse(localStorage.getItem('last_read_global') || '{}');
+    if (lastGlobal.title === title) {
+        localStorage.removeItem('last_read_global');
+        checkQuickResume();
+    }
+    
+    // 5. إعادة تحديث الشاشة
+    showToast("تم حذف السجل ياعسل");
+    loadHistory();
+}
+
+    function setTheme(color) { document.documentElement.style.setProperty('--main', color); localStorage.setItem('app_theme', color); showToast("تم تغيير اللون"); }
+    function togSearch(){ const b=document.getElementById('search-box'); b.style.display = b.style.display==='block'?'none':'block'; }
+    
+	
+function goSearch(q) {
+    if(!q || q.trim() === "") return;
+    
+    // 1. حفظ الكلمة في السجل
+    saveToSearchHistory(q);
+    
+    // 2. إخفاء القائمة والبحث
+    document.getElementById('search-history').style.display = 'none';
+    page = 1; 
+    document.getElementById('content-home').innerHTML = ''; 
+    showSkeleton(); 
+    togSearch(); // إخفاء مربع البحث
+    Android.search(q); 
+}
+
+// دالة استدعاء الجافا لفتح نافذة جوجل
+function doGoogleLogin() {
+    showToast("جاري فتح حسابات Google...");
+    if(typeof Android !== 'undefined') {
+        Android.startGoogleSignIn();
+    } else {
+        showToast("هذه الميزة تعمل داخل التطبيق فقط");
+    }
+}
+
+// دالة استقبال النتيجة من الجافا بعد النجاح
+function onGoogleLoginSuccess(b64) {
+    try {
+        const d = JSON.parse(decode(b64));
+        
+        // حفظ المستخدم محلياً
+        const user = { email: d.email, name: d.name };
+        localStorage.setItem('user_account', JSON.stringify(user));
+        
+        // إذا كان لديك مسار API لتسجيل الدخول بـ Google في الخادم الخاص بك (HF_API)، 
+        // يمكنك استدعاءه هنا. أما إذا كنت تعتمد على التخزين المحلي فقط، فالخطوات كافية.
+        
+        updateProfileUI();
+        showToast("تم تسجيل الدخول بواسطة Google بنجاح ✅");
+        
+    } catch(e) { 
+        console.error(e); 
+        showToast("حدث خطأ في قراءة بيانات Google");
+    }
+}
+
+    function closeDetails(){ document.getElementById('page-details').style.display='none'; }
+    function handleBack(){ if(document.getElementById('modal-overlay').style.display === 'flex') closeModal(); else if(document.getElementById('page-reader').style.display==='block') closeReader(); else if(document.getElementById('page-details').style.display==='block') closeDetails(); else if(document.getElementById('search-box').style.display==='block') togSearch(); else Android.exit(); }
+    function showToast(msg) { const t = document.getElementById('toast'); t.innerText = msg; t.style.display = 'block'; setTimeout(()=>{ t.style.display = 'none'; }, 2000); }
+    function openModal(title, body, isInput, onConfirm) { document.getElementById('modal-title').innerText = title; document.getElementById('modal-body').innerText = body; const input = document.getElementById('modal-input'); if(isInput) { input.style.display = 'block'; input.value = isInput === true ? '' : isInput; } else { input.style.display = 'none'; } document.getElementById('modal-confirm-btn').onclick = onConfirm; document.getElementById('modal-overlay').style.display = 'flex'; }
+    function closeModal() { document.getElementById('modal-overlay').style.display = 'none'; }
+    function openBackup() { const data = { fav: localStorage.getItem('fav'), history: localStorage.getItem('manga_history'), covers: localStorage.getItem('manga_covers') }; const code = btoa(unescape(encodeURIComponent(JSON.stringify(data)))); openModal("نسخ احتياطي", "انسخ الكود:", code, function() { document.getElementById("modal-input").select(); document.execCommand("copy"); showToast("تم النسخ ✅"); closeModal(); }); }
+    function openRestore() { 
+    openModal("استعادة", "الصق الكود:", true, function() { 
+        const code = document.getElementById('modal-input').value; 
+        if(!code) return; 
+        try { 
+            const json = JSON.parse(decodeURIComponent(escape(atob(code)))); 
+            if(json.fav) localStorage.setItem('fav', json.fav); 
+            if(json.history) localStorage.setItem('manga_history', json.history); 
+            if(json.covers) localStorage.setItem('manga_covers', json.covers); 
+            localStorage.setItem('last_read_global', ''); 
+            
+            showToast("تمت الاستعادة ✅"); 
+            
+            // التعديل هنا أيضاً لاستخدام دالة الجافا
+            setTimeout(() => {
+                if(typeof Android !== 'undefined') {
+                    Android.restartApp();
+                } else {
+                    window.location.reload();
+                }
+            }, 1000); 
+            
+        } catch(e) { 
+            showToast("كود خاطئ ❌"); 
+        } 
+        closeModal(); 
+    }); 
+}
+
+	function confirmClear() { 
+    openModal("تحذير", "مسح جميع البيانات؟", false, function() { 
+        // 1. تنفيذ المسح
+        localStorage.clear(); 
+        
+        // 2. مسح قاعدة بيانات الصور (الكاش) أيضاً لضمان نظافة تامة
+        if(window.indexedDB) {
+             var req = indexedDB.deleteDatabase('MangaCacheDB');
+        }
+
+        showToast("تم المسح 🗑️"); 
+        
+        // 3. إعادة التشغيل باستخدام دالة الجافا (هذا هو الحل)
+        setTimeout(() => {
+            if(typeof Android !== 'undefined') {
+                Android.restartApp(); 
+            } else {
+                window.location.reload();
+            }
+        }, 1000); 
+    }); 
+}
+
+    function setBrightness(val) { document.getElementById('brightness-overlay').style.opacity = val; }
+
+    isLoading = true; showSkeleton(); Android.getHome(1);
+	
+	// دالة لجلب الصورة مع حساب النسبة الحقيقية
+function loadImageXHR(url, imgId, txtId) {
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = 'blob'; // مهم جداً لاستقبال الصورة كملف
+
+    // 1. حدث التقدم (يحسب النسبة الحقيقية)
+    xhr.onprogress = function(e) {
+        if (e.lengthComputable) {
+            const percent = Math.round((e.loaded / e.total) * 100);
+            const txt = document.getElementById(txtId);
+            if(txt) txt.innerText = percent + "%";
+        }
+    };
+
+    // 2. عند اكتمال التحميل
+    xhr.onload = function() {
+        if (this.status === 200) {
+            const img = document.getElementById(imgId);
+            const txt = document.getElementById(txtId);
+            const blobUrl = window.URL.createObjectURL(this.response);
+            
+            img.onload = function() {
+                if(txt) txt.style.display = 'none'; // إخفاء النسبة
+                img.style.opacity = 1; // إظهار الصورة
+                window.URL.revokeObjectURL(blobUrl); // تنظيف الذاكرة
+            };
+            img.src = blobUrl;
+        }
+    };
+
+    // 3. في حال الفشل (نعود للطريقة العادية)
+    xhr.onerror = function() {
+        const img = document.getElementById(imgId);
+        const txt = document.getElementById(txtId);
+        if(txt) txt.style.display = 'none';
+        img.src = url; // محاولة تحميل عادية
+        img.style.opacity = 1;
+    };
+
+    xhr.send();
+}
+
+	// === دوال سجل البحث الذكي ===
+
+// 1. حفظ كلمة البحث
+function saveToSearchHistory(term) {
+    let history = JSON.parse(localStorage.getItem('search_history') || '[]');
+    // إزالة الكلمة إذا كانت موجودة سابقاً (لتجديد ترتيبها)
+    history = history.filter(item => item !== term);
+    // إضافة الكلمة في المقدمة
+    history.unshift(term);
+    // الاحتفاظ بآخر 5 كلمات فقط
+    if (history.length > 5) history.pop();
+    
+    localStorage.setItem('search_history', JSON.stringify(history));
+}
+
+// 2. عرض السجل
+function showHistory() {
+    const history = JSON.parse(localStorage.getItem('search_history') || '[]');
+    const con = document.getElementById('search-history');
+    const inp = document.getElementById('search-inp').value;
+    
+    if (history.length === 0) {
+        con.style.display = 'none';
+        return;
+    }
+
+    let h = '';
+    history.forEach(term => {
+        // فلترة النتائج إذا كان المستخدم يكتب شيئاً
+        if (inp && !term.includes(inp)) return;
+        
+        h += `<div class="hist-search-item">
+                <div class="hist-txt" onclick="goSearch('${term}')">
+                    <svg class="icon-sm" style="opacity:0.5"><use href="#icon-hist"></use></svg> 
+                    ${term}
+                </div>
+                <div class="hist-del" onclick="deleteSearchItem(event, '${term}')">✕</div>
+              </div>`;
+    });
+
+    if (h) {
+        con.innerHTML = h;
+        con.style.display = 'block';
+    } else {
+        con.style.display = 'none';
+    }
+}
+
+// 3. حذف عنصر من السجل
+function deleteSearchItem(e, term) {
+    e.stopPropagation(); // منع تفعيل البحث عند الضغط على زر الحذف
+    let history = JSON.parse(localStorage.getItem('search_history') || '[]');
+    history = history.filter(item => item !== term);
+    localStorage.setItem('search_history', JSON.stringify(history));
+    
+    // إعادة تحديث القائمة
+    showHistory();
+    // إعادة التركيز على حقل الكتابة
+    document.getElementById('search-inp').focus();
+}
+
+
+
+    // === أضف هذه الدوال في نهاية السكريبت ===
+    
+    // دالة لحفظ رقم الصورة التي تقرأها حالياً
+    function saveScrollPosition() {
+        const containers = document.querySelectorAll('.p-con');
+        for (let i = 0; i < containers.length; i++) {
+            const rect = containers[i].getBoundingClientRect();
+            // إذا كانت الصورة في منتصف الشاشة
+            if (rect.top >= -rect.height/2 && rect.top < window.innerHeight/2) {
+                const idx = containers[i].getAttribute('data-idx');
+                localStorage.setItem('scroll_pos_' + currentChapter.link, idx);
+                break;
+            }
+        }
+    }
+
+    // دالة للعودة لنفس المكان عند فتح الفصل
+    function restoreScrollPosition() {
+        const lastIdx = localStorage.getItem('scroll_pos_' + currentChapter.link);
+        if (lastIdx) {
+            // ننتظر قليلاً حتى يتم بناء العناصر ثم نقفز
+            setTimeout(() => {
+                const el = document.getElementById('con-' + lastIdx);
+                if (el) {
+                    el.scrollIntoView({behavior: "auto", block: "start"});
+                    showToast(`عدت للصورة ${parseInt(lastIdx)+1} 📍`);
+                }
+            }, 300);
+        } else {
+            document.getElementById('page-reader').scrollTop = 0;
+        }
+    }
+// === دوال القائمة السريعة (Quick Menu) ===
+
+let selectedMangaData = null;
+
+// 1. بدء الضغط
+function startLongPress(el, dataStr) {
+    isLongPressEvent = false;
+    
+    // إضافة تأثير "ضغطة" بصري
+    el.style.transform = "scale(0.95)";
+    el.style.transition = "0.2s";
+
+    // بدء المؤقت (600 ميلي ثانية = ضغطة مطولة)
+    longPressTimer = setTimeout(() => {
+        isLongPressEvent = true;
+        el.style.transform = "scale(1)"; // إعادة الحجم
+        if(navigator.vibrate) navigator.vibrate(50); // اهتزاز
+        
+        // فتح القائمة
+        selectedMangaData = JSON.parse(decodeURIComponent(dataStr));
+        openQuickMenu();
+    }, 600);
+}
+
+// 2. إنهاء الضغط (رفع الإصبع)
+function endLongPress() {
+    clearTimeout(longPressTimer);
+    // إعادة حجم الكروت لطبيعتها
+    document.querySelectorAll('.card').forEach(c => c.style.transform = "scale(1)");
+}
+
+// 3. إلغاء الضغط (عند تحريك الإصبع للتمرير)
+function cancelLongPress() {
+    clearTimeout(longPressTimer);
+}
+
+// 4. فتح النافذة
+function openQuickMenu() {
+    if(!selectedMangaData) return;
+    document.getElementById('qm-title').innerText = selectedMangaData.title;
+    
+    const overlay = document.getElementById('quick-menu-overlay');
+    const box = document.getElementById('quick-menu-box');
+    
+    overlay.style.display = 'flex';
+    // تأخير بسيط لتشغيل الأنيميشن
+    setTimeout(() => { box.classList.add('show'); }, 10);
+}
+
+// 5. إغلاق النافذة
+function closeQuickMenu() {
+    const overlay = document.getElementById('quick-menu-overlay');
+    const box = document.getElementById('quick-menu-box');
+    
+    box.classList.remove('show');
+    setTimeout(() => { overlay.style.display = 'none'; }, 200);
+}
+
+// 6. تنفيذ الأوامر
+function qmAction(type) {
+    closeQuickMenu();
+    if(!selectedMangaData) return;
+
+    if (type === 'fav') {
+        // نضع البيانات في المتغير العام ليتم التعامل معها
+        currData = selectedMangaData;
+        toggleFav(); // نستدعي دالة المفضلة الموجودة مسبقاً
+    } 
+    else if (type === 'copy') {
+        const text = selectedMangaData.title + "\n" + selectedMangaData.link;
+        // إنشاء عنصر مؤقت للنسخ
+        const elem = document.createElement("textarea");
+        document.body.appendChild(elem);
+        elem.value = text;
+        elem.select();
+        document.execCommand("copy");
+        document.body.removeChild(elem);
+        showToast("تم نسخ الرابط 📋");
+    }
+    else if (type === 'read') {
+        // فتح التفاصيل وقراءة أول فصل (أو المتابعة)
+        openDetails(selectedMangaData.title, selectedMangaData.img, selectedMangaData.link);
+        // يمكنك هنا إضافة منطق لقراءة آخر فصل مباشرة إذا أردت
+    }
+}
+
+
+function changeStatus(newStatus) {
+    let l = JSON.parse(localStorage.getItem('fav')||'[]');
+    const idx = l.findIndex(x => x.title === currData.title);
+    
+    if(idx > -1) {
+        l[idx].status = newStatus;
+        localStorage.setItem('fav', JSON.stringify(l));
+        // تحديث البيانات الحالية أيضاً
+        currData.status = newStatus;
+        showToast("تم تغيير الحالة ✅");
+    }
+}
+
+// دالة لرسم النجوم وعرض النتائج
+function renderRatingUI(data) {
+    const box = document.querySelector('.rating-box');
+    
+    const score10 = parseFloat(data.score_10 || 0);
+    const score5 = (score10 / 2).toFixed(1); 
+    const count = data.count || 0;
+    const breakdown = data.breakdown || {};
+
+    const mySavedRate = localStorage.getItem('my_rate_' + currData.link);
+    const userRating = mySavedRate ? parseInt(mySavedRate) : 0;
+
+    let starsHtml = '';
+    for(let i=1; i<=5; i++) {
+        const isActive = i <= userRating ? 'active' : '';
+        starsHtml += `<svg class="icon g-star-icon ${isActive}" onclick="rateManga(${i})"><use href="#icon-star"></use></svg>`;
+    }
+
+    let barsHtml = '';
+    for(let i=5; i>=1; i--) {
+        const votes = breakdown[i] || 0;
+        let percentVal = count > 0 ? (votes / count) * 100 : 0;
+        let percentTxt = Math.round(percentVal) + "%";
+        
+        barsHtml += `
+            <div class="g-bar-item">
+                <span style="width:10px">${i}</span>
+                <div class="g-progress-bg">
+                    <div class="g-progress-fill" style="width:${percentVal}%"></div>
+                </div>
+                <span class="g-perc-txt">${percentTxt}</span>
+            </div>
+        `;
+    }
+
+    // ✅ حماية من XSS
+    const safeCount = sanitizeHTML(String(count));
+    const safeScore = sanitizeHTML(String(score5));
+
+    const finalHtml = `
+        <div class="g-layout">
+            <div class="g-left">
+                <div id="rating-score" class="g-big-score">${safeScore}</div>
+                <div id="rating-stars" class="g-stars-row">${starsHtml}</div>
+                <div id="rating-count" class="g-total-txt">${safeCount} مراجعة</div>
+            </div>
+            
+            <div class="g-right">
+                ${barsHtml}
+            </div>
+        </div>
+        <div id="rating-msg" class="r-msg" style="display:none; text-align:center;"></div>
+    `;
+
+    box.innerHTML = finalHtml;
+    
+    const starCon = document.getElementById('rating-stars');
+    if(starCon) starCon.dataset.breakdown = JSON.stringify(breakdown);
+}
+
+// دالة يضغط عليها المستخدم للتقييم
+function rateManga(val) {
+    // 1. التحقق من تسجيل الدخول
+    const user = JSON.parse(localStorage.getItem('user_account'));
+    
+    if (!user || !user.email) {
+        showToast("⚠️ يجب تسجيل الدخول لتقييم المانجا!");
+        setTimeout(() => {
+            nav('set', document.querySelectorAll('.nav-item')[4]); 
+            toggleSignup(); 
+        }, 1000);
+        return;
+    }
+
+    // 2. حفظ التقييم محلياً ليبقى ملوناً دائماً
+    localStorage.setItem('my_rate_' + currData.link, val);
+
+    // 3. تحديث ألوان النجوم فوراً (تجميلي) دون انتظار السيرفر
+    const stars = document.querySelectorAll('.g-star-icon');
+    stars.forEach((star, index) => {
+        // index يبدأ من 0، والقيمة val تبدأ من 1
+        if (index < val) {
+            star.classList.add('active'); // تلوين
+        } else {
+            star.classList.remove('active'); // إزالة اللون
+        }
+    });
+
+    // 4. إرسال التقييم للسيرفر
+    window.lastRateVal = val;
+    showToast(`تم التقييم بـ ${val} نجوم ⭐️`);
+    
+    if(typeof Android !== 'undefined') {
+        Android.sendRatingAuth(currData.link, val, currData.title, currData.img, user.email);
+    }
+}
+
+
+
+// دالة استقبال البيانات بعد التقييم أو عند فتح الصفحة
+function onRatingLoaded(b64) {
+    try {
+        const d = JSON.parse(decode(b64));
+        renderRatingUI(d);
+        
+        // إذا كان هذا رد فعل على تقييم جديد (يحتوي على breakdown محدث)
+        // يمكننا عرض رسالة خاصة للمستخدم
+        const msgEl = document.getElementById('rating-msg');
+        
+        // هنا نفحص هل قام المستخدم بتقييم الآن؟ (يمكننا معرفة ذلك إذا حفظنا آخر تقييم محلياً، لكن للتبسيط سنعرض رسالة تعتمد على العدد)
+        // سنظهر رسالة توضح كم شخص قيم بنفس الرقم
+        // ملاحظة: بما أننا لا نعرف "أي نجمة ضغط بالضبط" في دالة الرد، سنعتمد على أن هذه الدالة تُستدعى لتحديث الواجهة فقط.
+        // لكن لكي نحقق طلبك "كم شخص قيم مثلك"، سنقوم بتعديل بسيط في دالة rateManga لتخزين الرقم المختار مؤقتاً.
+        
+        if (window.lastRateVal) {
+            const countSame = d.breakdown[window.lastRateVal] || 0;
+            msgEl.innerText = `شكراً! ${countSame} شخص يتفقون معك في هذا التقييم`;
+            msgEl.style.display = 'block';
+            window.lastRateVal = null; // تصفير
+        } else {
+            msgEl.style.display = 'none';
+        }
+        
+    } catch(e) {
+        console.error(e);
+    }
+}
+
+	// فتح صفحة الأفضل
+// فتح صفحة الأكثر شعبية
+function openTopRated() {
+    // 1. إظهار الصفحة المستقلة
+    document.getElementById('page-top').style.display = 'block';
+    
+    // 2. إخفاء شريط استئناف القراءة مؤقتاً (لأنه يظهر فوق كل شيء)
+    if(document.getElementById('quick-resume')) {
+        document.getElementById('quick-resume').style.display = 'none';
+    }
+
+    // 3. عرض مؤشر التحميل
+    const div = document.getElementById('top-list');
+    div.innerHTML = '<div class="spinner" style="margin-top:50px; grid-column:1/-1;"></div>';
+    
+    // 4. طلب البيانات
+    Android.getTop(); 
+}
+
+// إغلاق الصفحة (العودة للرئيسية)
+function closeTopRated() {
+    document.getElementById('page-top').style.display = 'none';
+    
+    // إعادة إظهار شريط القراءة إذا كان موجوداً
+    const qr = document.getElementById('quick-resume');
+    if(qr && qr.innerText.trim() !== "") {
+        qr.style.display = 'flex';
+    }
+}
+
+// استقبال البيانات وعرضها
+// استقبال البيانات وعرضها (بالتصميم القديم الأصلي)
+// استقبال البيانات وعرضها (مع إصلاح مشكلة عدم الفتح)
+function onTopLoaded(b64) {
+    try {
+        const list = JSON.parse(decode(b64));
+        const div = document.getElementById('top-list');
+        
+        if(list.length === 0) {
+            div.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:50px;color:#777">لا توجد بيانات</div>';
+            return;
+        }
+        
+        let h = '';
+        list.forEach((m, index) => {
+            const rankColor = index === 0 ? '#FFD700' : (index === 1 ? '#C0C0C0' : (index === 2 ? '#CD7F32' : '#444'));
+            
+            // ✅ الإصلاح: تنظيف النصوص من الفواصل التي تكسر الزر
+            // نستبدل كل علامة ' بعلامة \' ليقبلها الكود
+            const safeTitle = (m.title || "").replace(/'/g, "\\'"); 
+            const safeImg = (m.img || "").replace(/'/g, "\\'");
+            const safeLink = (m.link || "").replace(/'/g, "\\'");
+
+            h += `<div class="card" onclick="openDetails('${safeTitle}','${safeImg}','${safeLink}')">
+                    
+                    <div style="position:absolute;top:0;left:0;background:${rankColor};color:white;padding:5px 10px;font-weight:bold;z-index:2;border-bottom-right-radius:10px;box-shadow:2px 2px 5px rgba(0,0,0,0.5)">#${index+1}</div>
+                    
+                    <div style="position:absolute;top:0;right:0;background:rgba(0,0,0,0.7);color:#FFD700;padding:4px 6px;font-size:11px;z-index:2;border-bottom-left-radius:8px">★ ${m.score}</div>
+                    
+                    <img src="${m.img}" loading="lazy">
+                    
+                    <div class="card-grad"><div class="card-title">${m.title}</div></div>
+                  </div>`;
+        });
+        div.innerHTML = h;
+    } catch(e) { console.error(e); }
+}
+
+
+
+
+	// فتح صفحة التعليقات
+function openCommentsPage() {
+    document.getElementById('page-comments').style.display = 'block';
+    
+    // وضع اسم المانجا في العنوان
+    document.getElementById('comm-page-title').innerText = currData.title.substring(0,15) + '...';
+    
+    // استعادة الاسم المحفوظ
+    if(localStorage.getItem('MyName')) document.getElementById('chat-name').value = localStorage.getItem('MyName');
+    
+    // إظهار تحميل
+    document.getElementById('comments-container').innerHTML = '<div class="spinner" style="margin:50px auto"></div>';
+    
+    // طلب البيانات
+    Android.getComments(currData.link);
+}
+
+// إغلاق الصفحة والعودة للتفاصيل
+function backToDetails() {
+    document.getElementById('page-comments').style.display = 'none';
+}
+
+// استقبال التعليقات من السيرفر وعرضها
+function onCommentsLoaded(b64) {
+    try {
+        const list = JSON.parse(decode(b64));
+        const div = document.getElementById('comments-container');
+        
+        if(list.length === 0) {
+            div.innerHTML = '<div style="text-align:center;color:#666;margin-top:50px">لا توجد تعليقات.<br>ابدأ الحديث! 💬</div>';
+            return;
+        }
+        
+        let h = '';
+        list.forEach(c => {
+            // ✅ استخدام sanitizeHTML لحماية من XSS
+            h += `<div class="chat-bubble">
+                    <span class="chat-user">${sanitizeHTML(c.name)}</span>
+                    <div class="chat-text">${sanitizeHTML(c.text)}</div>
+                    <div class="chat-date">${sanitizeHTML(c.date)}</div>
+                  </div>`;
+        });
+        div.innerHTML = h;
+    } catch(e) {
+        console.error('Comments loading error:', e);
+    }
+}
+
+
+// إرسال التعليق
+function sendChatComment() {
+    const name = document.getElementById('chat-name').value.trim() || 'مجهول';
+    const text = document.getElementById('chat-msg').value.trim();
+    
+    if(!text) return;
+    
+    // حفظ الاسم للمرة القادمة
+    localStorage.setItem('MyName', name);
+    document.getElementById('chat-msg').value = ''; // تفريغ الحقل
+    
+    // إضافة التعليق فوراً للشاشة (لتشعر بالسرعة)
+    const div = document.getElementById('comments-container');
+    if(div.innerHTML.includes('لا توجد تعليقات')) div.innerHTML = '';
+    
+    const temp = `<div class="chat-bubble" style="opacity:0.7">
+                    <span class="chat-user">${name}</span>
+                    <div class="chat-text">${text}</div>
+                    <div class="chat-date">الآن</div>
+                  </div>`;
+    div.innerHTML = temp + div.innerHTML; // يضيفه في الأعلى
+    
+    // إرسال للسيرفر
+    Android.sendComment(currData.link, name, text);
+}
+
+
+function createCrystalSnow() {
+    // إزالة أي حاوية قديمة إذا وجدت
+    const oldContainer = document.querySelector('.snow-container');
+    if (oldContainer) oldContainer.remove();
+
+    const container = document.createElement('div');
+    container.className = 'snow-container';
+    document.body.appendChild(container);
+
+    const symbols = ['❄', '❅', '❆'];
+    const count = 40; 
+
+    for (let i = 0; i < count; i++) {
+        const flake = document.createElement('div');
+        flake.className = 'snowflake';
+        
+        flake.innerHTML = symbols[Math.floor(Math.random() * symbols.length)];
+        
+        // أحجام مختلفة لتعطي عمقاً
+        const size = (Math.random() * 15 + 12) + 'px';
+        flake.style.fontSize = size;
+        
+        flake.style.left = Math.random() * 100 + 'vw';
+        
+        // سرعة السقوط (بين 7 و 12 ثانية لتكون هادئة)
+        const duration = (Math.random() * 5 + 7) + 's';
+        flake.style.animationDuration = duration;
+        
+        // تأخير البدء لكي لا ينزل الثلج دفعة واحدة
+        flake.style.animationDelay = (Math.random() * 10) + 's';
+
+        container.appendChild(flake);
+    }
+
+    // الآن سيبقى الثلج لمدة دقيقة كاملة (60000 مللي ثانية) أو حتى يغلق التطبيق
+    setTimeout(() => {
+        container.style.transition = 'opacity 3s';
+        container.style.opacity = '0';
+        setTimeout(() => container.remove(), 5000);
+    }, 10000); 
+}
+
+// التشغيل
+window.addEventListener('load', createCrystalSnow);
+
+
+// 1. دالة استقبال البيانات
+
+
+let newsTimer = null;
+
+function onNewsLoaded(b64) {
+    try {
+        const d = JSON.parse(decode(b64));
+        const text = d.text;
+        showNewsCard(text);
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+// دالة منفصلة للإظهار لتسهيل الاستخدام
+function showNewsCard(text) {
+    const overlay = document.getElementById('news-overlay');
+    
+    if (newsTimer) clearTimeout(newsTimer);
+
+    if (text && text.trim() !== "") {
+        document.getElementById('news-content').innerText = text;
+        overlay.style.display = 'flex';
+
+        // الإخفاء التلقائي بعد 10 ثواني
+        newsTimer = setTimeout(() => {
+            closeNews();
+        }, 10000);
+    }
+}
+
+function closeNews() {
+    const overlay = document.getElementById('news-overlay');
+    if(overlay) overlay.style.display = 'none';
+}
+
+// === في دالة window.onload ===
+window.onload = function() {
+    // ... أكوادك السابقة ...
+    
+    // طلب الأخبار الحقيقي
+    if(typeof Android !== 'undefined') {
+        Android.getNews();
+    }
+    
+    
+};
+// متغيرات النظام
+let isSignupMode = false;
+// تحميل بيانات المستخدم فوراً عند فتح التطبيق بدلاً من انتظار التحديث
+let currentUser = JSON.parse(localStorage.getItem('user_account') || 'null');
+
+
+// 1. التبديل بين الدخول وإنشاء حساب
+function toggleSignup() {
+    isSignupMode = !isSignupMode;
+    const nameInp = document.getElementById('inp-name');
+    const submitBtn = document.getElementById('btn-submit-auth');
+    const toggleBtn = document.getElementById('btn-toggle-mode');
+
+    if(isSignupMode) {
+        nameInp.style.display = 'block'; // إظهار حقل الاسم
+        submitBtn.innerText = "إنشاء حساب";
+        submitBtn.setAttribute('onclick', 'doSignup()');
+        toggleBtn.innerText = "لديك حساب بالفعل؟ تسجيل دخول";
+    } else {
+        nameInp.style.display = 'none'; // إخفاء حقل الاسم
+        submitBtn.innerText = "تسجيل الدخول";
+        submitBtn.setAttribute('onclick', 'doLogin()');
+        toggleBtn.innerText = "ليس لديك حساب؟ إنشاء حساب جديد";
+    }
+}
+
+// 2. دوال الاتصال (ترسل البيانات للجافا/السيرفر)
+function doLogin() {
+    const email = document.getElementById('inp-email').value;
+    const pass = document.getElementById('inp-pass').value;
+    if(!email || !pass) { showToast("يرجى ملء جميع الحقول"); return; }
+    
+    showToast("جاري الاتصال...");
+    // استدعاء دالة الجافا (تأكد أنها موجودة في MainActivity)
+    if(typeof Android !== 'undefined') Android.login(email, pass);
+}
+
+function doSignup() {
+    const email = document.getElementById('inp-email').value;
+    const pass = document.getElementById('inp-pass').value;
+    const name = document.getElementById('inp-name').value;
+    if(!email || !pass || !name) { showToast("يرجى ملء جميع الحقول"); return; }
+    
+    showToast("جاري إنشاء الحساب...");
+    // استدعاء دالة الجافا
+    if(typeof Android !== 'undefined') Android.signup(email, pass, name);
+}
+
+// 3. استقبال الردود (عند نجاح الدخول/التسجيل)
+function onLoginResponse(b64) {
+    try {
+        const d = JSON.parse(decode(b64));
+        if(d.status === "success") {
+            const user = { email: document.getElementById('inp-email').value, name: d.name };
+            localStorage.setItem('user_account', JSON.stringify(user));
+            
+            // دمج المفضلة القادمة من السيرفر
+            if(d.favs) mergeFavorites(d.favs);
+            
+            updateProfileUI();
+            showToast("تم الدخول بنجاح ✅");
+        } else {
+            showToast("خطأ: " + d.msg);
+        }
+    } catch(e) { console.error(e); }
+}
+
+function onAuthResponse(b64) {
+    // رد إنشاء الحساب
+    const d = JSON.parse(decode(b64));
+    if(d.status === "success") {
+        showToast("تم إنشاء الحساب! سجل دخولك الآن");
+        toggleSignup(); // العودة لشاشة الدخول
+    } else {
+        showToast("خطأ: " + d.msg);
+    }
+}
+
+// 4. تحديث الواجهة (إظهار البروفايل أو حقول الدخول)
+function updateProfileUI() {
+    const saved = localStorage.getItem('user_account');
+    const loginView = document.getElementById('login-view');
+    const profileView = document.getElementById('profile-view');
+    
+    if(saved) {
+        // المستخدم مسجل دخول
+        currentUser = JSON.parse(saved);
+        loginView.style.display = 'none';
+        profileView.style.display = 'block';
+        
+        document.getElementById('profile-name').innerText = currentUser.name;
+        document.getElementById('profile-email').innerText = currentUser.email;
+        // وضع الحرف الأول من الاسم كصورة
+        document.getElementById('profile-avatar').innerText = currentUser.name.charAt(0).toUpperCase();
+    } else {
+        // المستخدم غير مسجل
+        loginView.style.display = 'block';
+        profileView.style.display = 'none';
+    }
+}
+
+// 5. تسجيل الخروج
+function logout() {
+    if(confirm("هل أنت متأكد من تسجيل الخروج؟")) {
+        localStorage.removeItem('user_account');
+        currentUser = null;
+        // تفريغ الحقول
+        document.getElementById('inp-email').value = '';
+        document.getElementById('inp-pass').value = '';
+        updateProfileUI();
+        showToast("تم تسجيل الخروج");
+    }
+}
+
+// 6. المزامنة ودمج المفضلة
+function syncNow() {
+    if(!currentUser) return;
+    const localFavs = localStorage.getItem('fav') || '[]';
+    showToast("جاري المزامنة مع السحابة...");
+    if(typeof Android !== 'undefined') Android.syncFav(currentUser.email, localFavs);
+}
+
+function mergeFavorites(cloudFavsJson) {
+    try {
+        let cloudFavs = JSON.parse(cloudFavsJson);
+        let localFavs = JSON.parse(localStorage.getItem('fav') || '[]');
+        
+        // دمج القوائم ومنع التكرار
+        let merged = [...localFavs];
+        cloudFavs.forEach(cItem => {
+            if(!merged.find(lItem => lItem.title === cItem.title)) {
+                merged.push(cItem);
+            }
+        });
+        
+        localStorage.setItem('fav', JSON.stringify(merged));
+        // تحديث واجهة المفضلة إذا كانت مفتوحة
+        if(document.getElementById('v-fav').style.display === 'block') loadFav();
+        
+    } catch(e) {}
+}
+
+// === تشغيل التحقق عند فتح التطبيق ===
+// نضيف هذا السطر للتأكد من تشغيل التحقق عند بداية التطبيق
+const _originalOnLoad = window.onload;
+window.onload = function() {
+    if(_originalOnLoad) _originalOnLoad(); // تشغيل الكود القديم
+    updateProfileUI(); // تشغيل كود البروفايل الجديد
+};
+
+
+// دالة مساعدة لفتح الفصل من السجل مع تحديث العنوان لتجنب التداخل
+function readFromHistory(title, img, link, name) {
+    // 1. تحديث المتغير العام باسم المانجا التي تم الضغط عليها
+    currData = { 
+        title: title, 
+        img: img, 
+        link: link // ملاحظة: هذا رابط الفصل وليس المانجا، لكن العنوان هو الأهم للسجل
+    };
+
+    // 2. البدء بالقراءة
+    read(link, name);
+}
+
+
+
+
+function switchTab(name, btn) {
+    // إخفاء الكل
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    // إظهار المطلوب
+    document.getElementById('view-' + name).classList.add('active');
+    btn.classList.add('active');
+
+    // إذا ضغط على التعليقات، نحملها
+    if(name === 'comments') {
+        const con = document.getElementById('comments-container');
+        if(!con.innerHTML) {
+            con.innerHTML = '<div class="spinner" style="margin:20px auto"></div>';
+            if(localStorage.getItem('MyName')) document.getElementById('chat-name').value = localStorage.getItem('MyName');
+            Android.getComments(currData.link);
+        }
+    }
+}
+
+function resumeLastManga() {
+    const last = JSON.parse(localStorage.getItem('last_read_global'));
+    
+    if(last) {
+        // === التعديل: إنشاء بيانات المانجا من السجل ===
+        const mangaData = {
+            title: last.title,
+            img: last.img,
+            link: last.mangaLink || ''
+        };
+        read(last.link, last.chapter, mangaData);
+    } else {
+        showToast("لا يوجد سجل قراءة سابق");
+    }
+}
+
+// === دوال مسح الكاش ===
+
+function confirmClearCache() {
+    // نستخدم نافذة المودال الموجودة مسبقاً للتأكيد
+    openModal(
+        "مسح الكاش", 
+        "هل تريد حذف الصور المحملة مؤقتاً؟\n(هذا سيحرر مساحة الذاكرة ولن يحذف التحميلات الدائمة أو المفضلة)", 
+        false, 
+        function() {
+            clearReadingCache();
+            closeModal();
+        }
+    );
+}
+
+async function clearReadingCache() {
+    try {
+        // 1. محاولة فتح قاعدة البيانات
+        const db = await openCacheDB();
+        
+        // 2. بدء عملية الحذف
+        const tx = db.transaction('images', 'readwrite');
+        const store = tx.objectStore('images');
+        const req = store.clear(); // دالة الحذف الشامل
+
+        req.onsuccess = () => {
+            showToast("تم تنظيف الذاكرة المؤقتة بنجاح 🧹");
+            
+            // تحديث الواجهة إذا كان هناك قراءة جارية (اختياري)
+            if(document.getElementById('page-reader').style.display === 'block') {
+                showToast("يرجى إعادة فتح الفصل");
+            }
+        };
+
+        req.onerror = (e) => {
+            console.error(e);
+            showToast("فشل في مسح الكاش");
+        };
+
+    } catch (e) {
+        console.error(e);
+        // في حال لم تكن قاعدة البيانات موجودة أصلاً
+        showToast("الذاكرة نظيفة بالفعل ✨");
+    }
+}
+// ==========================================
+//  إضافات نظام التحميل - أضف هذا في نهاية السكريبت
+// ==========================================
+
+// 1. عند الضغط على زر التحميل
+// في ملف index.html
+function downloadChapter(el, url, name) {
+    if(el.classList.contains('downloaded')) {
+        showToast("هذا الفصل محمّل بالفعل ✅");
+        return;
+    }
+    
+    currentChapter.name = name; 
+    
+    el.innerHTML = '<div class="spinner" style="width:15px;height:15px;border-width:2px"></div>';
+    el.onclick = null; 
+    
+    // التعديل هنا: نمرر currData.img كمعامل رابع
+    if(typeof Android !== 'undefined') {
+        // تأكدنا من إرسال العنوان والصورة الحاليين عند لحظة الضغط
+        Android.downloadChapter(url, currData.title, name, currData.img);
+    } else {
+        showToast("التحميل غير متاح في الوضع الحالي");
+    }
+}
+
+
+// 2. استقبال إشارة البدء (اختياري)
+function onDownloadStart(url) {
+    showToast("جاري بدء التحميل... 📥");
+}
+
+// 3. تحديث النسبة المئوية (هذا يظهر الأرقام)
+function onDownloadProgress(url, percent) {
+    // إنشاء معرّف الزر بنفس الطريقة المستخدمة في renderChapters
+    const id = "btn-dl-" + btoa(url);
+    const btn = document.getElementById(id);
+    
+    if(btn) {
+        // وضع الرقم داخل الزر
+        btn.innerHTML = `<span style="font-size:10px;color:var(--main);font-weight:bold">${percent}%</span>`;
+    }
+}
+
+// 4. عند اكتمال التحميل (تحويل الزر إلى علامة صح وحفظ البيانات)
+// في ملف index.html
+// هذه الدالة الآن تستقبل B64 يحتوي على البيانات الأصلية بدلاً من الاعتماد على currData
+function onDownloadComplete(b64) {
+    try {
+        // فك تشفير البيانات القادمة من الجافا
+        const data = JSON.parse(decode(b64));
+        const url = data.url;      // الرابط
+        const title = data.title;  // العنوان الأصلي (الصحيح)
+        const name = data.name;    // اسم الفصل
+        const img = data.img;      // صورة الغلاف
+        
+        // تحديث زر التحميل في الواجهة
+        const id = "btn-dl-" + btoa(url);
+        const btn = document.getElementById(id);
+        
+        if(btn) {
+            btn.innerHTML = "✅";
+            btn.classList.add('downloaded');
+            btn.onclick = function() { 
+                showToast("هذا الفصل محمّل ✅"); 
+            };
+        }
+
+        // الحفظ في السجل باستخدام البيانات الصحيحة (title) وليس currData.title
+        let downloads = JSON.parse(localStorage.getItem('downloads_list') || '[]');
+        
+        if(!downloads.find(d => d.link === url)) {
+            downloads.unshift({
+                title: title, // نستخدم العنوان القادم من الجافا (ثابت)
+                img: img || "error.png",
+                name: name,
+                link: url,
+                time: Date.now(),
+                mangaData: {
+                    title: title,
+                    img: img,
+                    link: "" // يمكن تركه فارغاً أو تمريره إذا لزم الأمر
+                }
+            });
+            localStorage.setItem('downloads_list', JSON.stringify(downloads));
+        }
+        
+        localStorage.setItem('dl_' + url, 'true');
+        showToast("تم التحميل بنجاح 📥");
+        
+        // تحديث القائمة إذا كانت مفتوحة
+        if(document.getElementById('v-down').style.display === 'block') {
+            loadDownloads();
+        }
+
+    } catch(e) {
+        console.error("Download completion error:", e);
+    }
+}
+
+// 5. عند فشل التحميل
+function onDownloadError(url) {
+    const id = "btn-dl-" + btoa(url);
+    const btn = document.getElementById(id);
+    
+    if(btn) {
+        btn.innerHTML = "❌"; // علامة خطأ
+        // إعادة تفعيل الزر للمحاولة مرة أخرى
+        btn.onclick = function() { 
+            downloadChapter(this, url, currentChapter.name); 
+        };
+    }
+    showToast("فشل التحميل! تأكد من الإنترنت ⚠️");
+}
+
+
+function loadDownloads() {
+    const list = JSON.parse(localStorage.getItem('downloads_list') || '[]');
+    const div = document.getElementById('content-down');
+    div.innerHTML = '';
+
+    if (list.length === 0) {
+        div.innerHTML = '<div style="text-align:center;padding:50px;color:#777">لا توجد تحميلات</div>';
+        return;
+    }
+
+    // خطوة التجميع: نجمع الفصول التي لها نفس العنوان
+    let grouped = {};
+    list.forEach(item => {
+        if (!grouped[item.title]) {
+            grouped[item.title] = {
+                img: item.img,
+                chapters: []
+            };
+        }
+        grouped[item.title].chapters.push(item);
+    });
+
+    // بناء الواجهة
+    let html = '';
+    for (let title in grouped) {
+        const manga = grouped[title];
+        
+        // بداية الكرت
+        html += `<div class="down-card">
+                    <div class="down-header">
+                        <img src="${manga.img}" class="down-poster">
+                        <div class="down-title">${title}</div>
+                    </div>
+                    <div class="down-ch-list">`;
+        
+        // إضافة الفصول داخل الكرت
+        manga.chapters.forEach(ch => {
+            const safeLink = ch.link.replace(/'/g, "\\'");
+            const safeName = ch.name.replace(/'/g, "\\'");
+            
+            // === تحضير بيانات المانجا للتمرير ===
+            const mangaDataStr = ch.mangaData ? 
+                JSON.stringify(ch.mangaData).replace(/'/g, "\\'").replace(/"/g, '&quot;') : 
+                `{"title":"${title.replace(/'/g, "\\'")}","img":"${manga.img.replace(/'/g, "\\'")}","link":""}`.replace(/"/g, '&quot;');
+            
+            html += `<div class="down-ch-item">
+                        <span class="down-ch-name">${ch.name}</span>
+                        <div class="down-actions">
+                            <button class="btn-read-sm ripple" onclick='read("${safeLink}", "${safeName}", JSON.parse(decodeURIComponent("${encodeURIComponent(ch.mangaData ? JSON.stringify(ch.mangaData) : `{"title":"${title}","img":"${manga.img}","link":""}`)}")))'> قراءة</button>
+                            <button class="btn-del-sm ripple" onclick="deleteDownload('${safeLink}')">
+                                <svg class="icon-sm"><use href="#icon-trash"></use></svg>
+                            </button>
+                        </div>
+                     </div>`;
+        });
+
+        html += `   </div>
+                 </div>`;
+    }
+    
+    div.innerHTML = html;
+}
+// 8. حذف فصل محدد
+function deleteDownload(urlToDelete) {
+    // 1. جلب القائمة
+    let list = JSON.parse(localStorage.getItem('downloads_list') || '[]');
+    
+    // 2. التصفية: نبقي فقط العناصر التي لا تطابق الرابط المراد حذفه
+    const newList = list.filter(item => item.link !== urlToDelete);
+    
+    // 3. تحديث الذاكرة
+    localStorage.setItem('downloads_list', JSON.stringify(newList));
+    
+    // 4. إزالة علامة "تم التحميل" من الزر الأصلي
+    localStorage.removeItem('dl_' + urlToDelete);
+
+    // 5. أمر الجافا بحذف الملفات
+    if(typeof Android !== 'undefined') {
+        Android.deleteChapter(urlToDelete);
+    }
+
+    // 6. تحديث الشاشة
+    loadDownloads();
+    showToast("تم الحذف 🗑️");
+}
+
+
+function toggleReadMark(event, link) {
+    // منع فتح القراءة
+    event.stopPropagation();
+    
+    let history = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    
+    if(!history[currData.title]) {
+        history[currData.title] = { last: null, read: [] };
+    }
+    
+    const readList = history[currData.title].read;
+    const index = readList.indexOf(link);
+    
+    if(index > -1) {
+        // إزالة العلامة
+        readList.splice(index, 1);
+        showToast("تم إزالة علامة المقروء ❌");
+    } else {
+        // إضافة العلامة
+        readList.push(link);
+        showToast("تم وضع علامة مقروء ✓");
+    }
+    
+    localStorage.setItem('manga_history', JSON.stringify(history));
+    renderChapters(); // إعادة رسم القائمة
+}
+
+
+
+</script>
+  </body>
+
+
+
+
+
