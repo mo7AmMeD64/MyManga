@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -2214,6 +2215,7 @@ function card(m) {
         showToast("تمت الإضافة للمكتبة ❤️");
     }
     localStorage.setItem('fav', JSON.stringify(l)); 
+    syncFavToServer();
     checkFav(); 
 }
 
@@ -2671,7 +2673,7 @@ function changeStatus(newStatus) {
     if(idx > -1) {
         l[idx].status = newStatus;
         localStorage.setItem('fav', JSON.stringify(l));
-        // تحديث البيانات الحالية أيضاً
+        syncFavToServer();
         currData.status = newStatus;
         showToast("تم تغيير الحالة ✅");
     }
@@ -3524,11 +3526,76 @@ function toggleReadMark(event, link) {
     renderChapters(); // إعادة رسم القائمة
 }
 
+// ========== إدارة المستخدم ==========
+let currentUser = null;
+
+// يُستدعى من Java بعد نجاح Google Sign In
+function onGoogleLoginSuccess(b64) {
+    const data = JSON.parse(atob(b64));
+    currentUser = data; // { email, name }
+    
+    // حفظ محلياً
+    localStorage.setItem('user', JSON.stringify(currentUser));
+    
+    // تسجيل على السيرفر وجلب المفضلة
+    Android.googleLoginToServer(data.email, data.name);
+    
+    showToast('مرحباً ' + data.name + ' 👋');
+    updateUserUI();
+}
+
+// يُستدعى بعد التسجيل على السيرفر
+function onGoogleServerLogin(b64) {
+    const data = JSON.parse(atob(b64));
+    if (data.success) {
+        // جلب المفضلة من السيرفر
+        Android.getFav(currentUser.email);
+    }
+}
+
+// يُستدعى بعد جلب المفضلة
+function onFavLoaded(b64) {
+    const serverFavs = JSON.parse(atob(b64));
+    if (serverFavs && serverFavs.length > 0) {
+        // دمج مع المحلية أو استبدالها
+        localStorage.setItem('favorites', JSON.stringify(serverFavs));
+        renderFavorites(); // دالتك لعرض المفضلة
+        showToast('تم استرجاع ' + serverFavs.length + ' مفضلة ✅');
+    }
+}
+
+// عند إضافة/حذف من المفضلة — استدعِها بعد كل تغيير
+function syncFavToServer() {
+    if (!currentUser) return;
+    const favs = JSON.parse(localStorage.getItem('favorites') || '[]');
+    Android.syncFav(currentUser.email, JSON.stringify(favs));
+}
+
+// تحميل المستخدم عند فتح التطبيق
+function initUser() {
+    const saved = localStorage.getItem('user');
+    if (saved) {
+        currentUser = JSON.parse(saved);
+        // جلب أحدث مفضلة من السيرفر
+        Android.getFav(currentUser.email);
+        updateUserUI();
+    }
+}
+
+function updateUserUI() {
+    // مثال: عرض اسم المستخدم في الـ UI
+    const userNameEl = document.getElementById('user-name');
+    if (userNameEl && currentUser) {
+        userNameEl.textContent = currentUser.name;
+    }
+}
+
+// استدعِها عند تحميل الصفحة
+window.addEventListener('load', initUser);
 
 
 </script>
   </body>
-
 
 
 
