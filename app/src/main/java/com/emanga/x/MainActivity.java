@@ -1,3 +1,4 @@
+
 package com.emanga.x;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -789,6 +790,41 @@ public class MainActivity extends Activity {
 
 
         @JavascriptInterface
+public void getFav(final String email) {
+    executor.execute(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                String apiUrl = "/get-fav?email=" + URLEncoder.encode(email, "UTF-8");
+                String response = callApi(apiUrl);
+                if (response != null) {
+                    sendDataToJS("onFavLoaded", response);
+                } else {
+                    sendDataToJS("onFavLoaded", "[]");
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+        }
+    });
+}
+
+@JavascriptInterface
+public void googleLoginToServer(final String email, final String name) {
+    executor.execute(new Runnable() {
+        @Override
+        public void run() {
+            try {
+                // تسجيل/إنشاء حساب تلقائي بـ Google
+                String apiUrl = "/google-login?email=" + URLEncoder.encode(email, "UTF-8") +
+                    "&name=" + URLEncoder.encode(name, "UTF-8");
+                String response = callApi(apiUrl);
+                if (response != null) {
+                    sendDataToJS("onGoogleServerLogin", response);
+                }
+            } catch (Exception e) { e.printStackTrace(); }
+        }
+    });
+}
+        @JavascriptInterface
         public void getTop() {
             executor.execute(new Runnable() {
 					@Override
@@ -908,7 +944,6 @@ public class MainActivity extends Activity {
         webView.evaluateJavascript("handleBack();", null);
     }
 }
-
 
 
 
