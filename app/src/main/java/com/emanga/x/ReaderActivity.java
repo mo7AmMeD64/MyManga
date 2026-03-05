@@ -26,6 +26,10 @@ import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -530,15 +534,15 @@ public class ReaderActivity extends Activity {
         executor.execute(() -> {
             try {
                 String html = fetchUrl(url);
-                org.jsoup.Document doc = org.jsoup.Jsoup.parse(html);
+                Document doc = Jsoup.parse(html);
 
                 // جلب الصور - نفس منطق MainActivity
-                org.jsoup.select.Elements imgs = doc.select(
+                Elements imgs = doc.select(
                     "div.image_list canvas[data-src], div.image_list img, .reading-content img, #readerarea img"
                 );
 
                 JSONArray pages = new JSONArray();
-                for (org.jsoup.nodes.Element img : imgs) {
+                for (Element img : imgs) {
                     String src = img.hasAttr("data-src") ? img.absUrl("data-src") : img.absUrl("src");
                     if (!src.isEmpty() && !src.contains("loader") && !src.contains("pixel")) {
                         pages.put(src);
@@ -877,14 +881,12 @@ public class ReaderActivity extends Activity {
     private void toggleEyeCare(TextView btn) {
         isEyeCare = !isEyeCare;
         if (isEyeCare) {
-            pagesContainer.setColorFilter(
-                android.graphics.ColorMatrix.class != null ? null : null);
             android.graphics.ColorMatrix cm = new android.graphics.ColorMatrix();
             float[] matrix = {
-                0.9f, 0.1f, 0f, 0f, 10f,
+                0.9f, 0.1f, 0f,   0f, 10f,
                 0.1f, 0.85f, 0.05f, 0f, 10f,
-                0.05f, 0.1f, 0.7f, 0f, 0f,
-                0f, 0f, 0f, 1f, 0f
+                0.05f, 0.1f, 0.7f, 0f,  0f,
+                0f,   0f,   0f,   1f,  0f
             };
             cm.set(matrix);
             android.graphics.ColorMatrixColorFilter filter =
