@@ -27,15 +27,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".ReaderActivity"
-            android:label="القارئ"
-            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
-            android:configChanges="orientation|keyboardHidden|screenSize|smallestScreenSize|screenLayout"
-            android:screenOrientation="portrait"
-            android:hardwareAccelerated="true" />
-
     </application>
 </manifest>
-
 
