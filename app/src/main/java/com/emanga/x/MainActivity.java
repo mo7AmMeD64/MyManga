@@ -768,25 +768,6 @@ public class MainActivity extends Activity {
 				});
         }
 
-        // ===== فتح القارئ الحقيقي (ReaderActivity) =====
-        @JavascriptInterface
-        public void openNativeReader(final String chapterUrl, final String chapterName,
-                                     final String mangaTitle, final String chaptersJson,
-                                     final String mangaImg) {
-            mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(MainActivity.this, ReaderActivity.class);
-                    intent.putExtra(ReaderActivity.EXTRA_CHAPTER_URL,   chapterUrl);
-                    intent.putExtra(ReaderActivity.EXTRA_CHAPTER_NAME,  chapterName);
-                    intent.putExtra(ReaderActivity.EXTRA_MANGA_TITLE,   mangaTitle);
-                    intent.putExtra(ReaderActivity.EXTRA_CHAPTERS_JSON, chaptersJson);
-                    intent.putExtra(ReaderActivity.EXTRA_MANGA_IMG,     mangaImg);
-                    startActivity(intent);
-                }
-            });
-        }
-
         @JavascriptInterface
         public void toggleFullscreen(final boolean enable) {
             mainHandler.post(new Runnable() {
@@ -928,6 +909,4 @@ public class MainActivity extends Activity {
         webView.evaluateJavascript("handleBack();", null);
     }
 }
-
-
 
