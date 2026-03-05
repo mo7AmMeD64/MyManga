@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
   <head>
@@ -2063,54 +2061,73 @@ function renderChapters(filterText = '') {
     
         
 function read(url, name, mangaData) {
-    // === إذا تم تمرير بيانات المانجا، نستخدمها ===
-    if (mangaData) currData = mangaData;
+    try { Android.toggleFullscreen(true); } catch(e){} 
 
-    // === حفظ السجل ===
-    if (currData) {
-        let history = JSON.parse(localStorage.getItem('manga_history') || '{}');
-        if (!history[currData.title]) history[currData.title] = { last: null, read: [] };
-        history[currData.title].last = { link: url, name: name, time: Date.now() };
-        if (!history[currData.title].read.includes(url))
-            history[currData.title].read.push(url);
-        localStorage.setItem('manga_history', JSON.stringify(history));
-        localStorage.setItem('last_read_global', JSON.stringify({
-            title: currData.title, chapter: name, link: url,
-            img: currData.img, mangaLink: currData.link
-        }));
-        checkQuickResume();
-        if (document.getElementById('page-details').style.display === 'block') {
-            renderChapters();
-            updateResumeButton();
-        }
-    }
-
-    // === فتح القارئ الحقيقي ===
-    try {
-        const chaptersJson = JSON.stringify(chapterList);
-        const imgUrl = currData ? (currData.img || '') : '';
-        const titleStr = currData ? (currData.title || '') : '';
-        Android.openNativeReader(url, name, titleStr, chaptersJson, imgUrl);
-    } catch(e) {
-        // fallback: القارئ القديم إذا فشل استدعاء Java
-        _readFallback(url, name);
-    }
-}
-
-// القارئ القديم كـ fallback فقط
-function _readFallback(url, name) {
-    try { Android.toggleFullscreen(true); } catch(e){}
     currentChapter = { link: url, name: name };
+    
+    // === إذا تم تمرير بيانات المانجا، نستخدمها، وإلا نستخدم currData الحالية ===
+    if (mangaData) {
+        currData = mangaData;
+    }
+    
+    // === حفظ السجل ===
+    let history = JSON.parse(localStorage.getItem('manga_history') || '{}');
+    if(!history[currData.title]) {
+        history[currData.title] = { last: null, read: [] };
+    }
+    
+    // حفظ آخر فصل مع الوقت
+    history[currData.title].last = {
+        link: url,
+        name: name,
+        time: Date.now()
+    };
+    
+    // إضافة الفصل لقائمة المقروءة إن لم يكن موجوداً
+    if(!history[currData.title].read.includes(url)) {
+        history[currData.title].read.push(url);
+    }
+    
+    localStorage.setItem('manga_history', JSON.stringify(history));
+
+    // حفظ سجل عام للاستئناف السريع
+   localStorage.setItem('last_read_global', JSON.stringify({
+        title: currData.title,
+        chapter: name,
+        link: url,
+        img: currData.img,
+        mangaLink: currData.link  // === إضافة رابط المانجا ===
+    }));
+
+    // تحديث زر الاستئناف
+    checkQuickResume();
+    
+    // تحديث قائمة الفصول إذا كانت صفحة التفاصيل مفتوحة
+    if(document.getElementById('page-details').style.display === 'block') {
+        renderChapters(); // تحديث القائمة لتظهر الفصل كمقروء
+        updateResumeButton(); // تحديث زر الاستئناف
+    }
+    // ==================
+    
+    // إظهار القارئ
     const reader = document.getElementById('page-reader');
-    if (reader) {
-        reader.style.display = 'block';
-        reader.scrollTop = 0;
-        document.getElementById('reader-imgs').innerHTML = `
-            <div style="height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#ccc;">
-                <div class="spinner"></div>
-                <h3 style="margin-top:20px">جاري جلب الفصل...</h3>
-                <p style="font-size:12px;opacity:0.7">${name}</p>
-            </div>`;
+    reader.style.display = 'block';
+    reader.scrollTop = 0;
+    
+    // عرض مؤشر تحميل
+    document.getElementById('reader-imgs').innerHTML = `
+        <div style="height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#ccc;">
+            <div class="spinner"></div>
+            <h3 style="margin-top:20px">جاري جلب الفصل...</h3>
+            <p style="font-size:12px; opacity:0.7">${name}</p>
+        </div>`;
+
+    // التحقق من الكاش
+    const cached = JSON.parse(localStorage.getItem('cached_chapter_data') || 'null');
+    
+    if (cached && cached.link === url) {
+        onImagesLoaded(cached.b64, true);
+    } else {
         Android.getImages(url);
     }
 }
